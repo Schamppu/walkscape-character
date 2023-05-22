@@ -22,7 +22,7 @@ class CharacterImage extends StatelessWidget {
                 for (var sprite in selectedSprites)
                   sprite.layer == i
                       ? Image.asset(
-                          PfpManager().chosenBody.spritePath,
+                          sprite.runtimeType == SpriteFace ? (sprite as SpriteFace).expressionOptions[PfpManager().chosenExpression]! : sprite.spritePath,
                           width: width,
                           height: height,
                           scale: 0.01,

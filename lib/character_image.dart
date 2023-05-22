@@ -32,26 +32,54 @@ class CharacterImage extends StatelessWidget {
               for (var i = 0; i < 15; i++)
                 for (var sprite in selectedSprites)
                   sprite.layer == i
-                      ? FutureBuilder(
-                          future: switchColorPalette(
-                            imagePath: sprite.runtimeType == SpriteFace ? (sprite as SpriteFace).expressionOptions[PfpManager().chosenExpression]! : sprite.spritePath,
-                            existingColors: getDefaultColor(),
-                            changeColors: getChangedColor(),
-                          ),
-                          builder: (_, AsyncSnapshot<Uint8List> snapshot) {
-                            return snapshot.hasData
-                                ? Image.memory(
-                                    snapshot.data!,
-                                    width: width,
-                                    height: height,
-                                    scale: 0.1,
-                                    filterQuality: FilterQuality.none,
-                                    frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                                      return child;
+                      ? Stack(
+                          children: [
+                            FutureBuilder(
+                              future: switchColorPalette(
+                                imagePath:
+                                    sprite.runtimeType == SpriteFace ? (sprite as SpriteFace).expressionOptions[PfpManager().chosenExpression]! : sprite.spritePath,
+                                existingColors: getDefaultColor(),
+                                changeColors: getChangedColor(),
+                              ),
+                              builder: (_, AsyncSnapshot<Uint8List> snapshot) {
+                                return snapshot.hasData
+                                    ? Image.memory(
+                                        snapshot.data!,
+                                        width: width,
+                                        height: height,
+                                        scale: 0.1,
+                                        filterQuality: FilterQuality.none,
+                                        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                                          return child;
+                                        },
+                                      )
+                                    : const Center(child: CircularProgressIndicator());
+                              },
+                            ),
+                            (sprite.runtimeType == SpriteFace && PfpManager().chosenExpression != 'sad' && PfpManager().chosenExpression != 'laughing')
+                                ? FutureBuilder(
+                                    future: switchColorPalette(
+                                      imagePath: PfpManager().chosenBody.irisPath,
+                                      existingColors: colorOptionsEyes['black']!,
+                                      changeColors: colorOptionsEyes[PfpManager().colorEyes]!,
+                                    ),
+                                    builder: (_, AsyncSnapshot<Uint8List> snapshot) {
+                                      return snapshot.hasData
+                                          ? Image.memory(
+                                              snapshot.data!,
+                                              width: width,
+                                              height: height,
+                                              scale: 0.1,
+                                              filterQuality: FilterQuality.none,
+                                              frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                                                return child;
+                                              },
+                                            )
+                                          : const SizedBox.shrink();
                                     },
                                   )
-                                : Center(child: const CircularProgressIndicator());
-                          },
+                                : const SizedBox.shrink(),
+                          ],
                         )
                       : const SizedBox.shrink(),
             ],

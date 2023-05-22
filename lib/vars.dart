@@ -62,3 +62,26 @@ const colorOptionsBackground = {
     Color.fromARGB(255, 223, 224, 232),
   ],
 };
+
+const colorOptionsEyes = {
+  'black': [
+    Color.fromARGB(255, 19, 19, 19),
+    Color.fromARGB(255, 39, 39, 39),
+  ],
+  'blue': [
+    Color.fromARGB(255, 45, 68, 110),
+    Color.fromARGB(255, 70, 99, 156),
+  ],
+  'green': [
+    Color.fromARGB(255, 36, 83, 39),
+    Color.fromARGB(255, 51, 122, 54),
+  ],
+  'brown': [
+    Color.fromARGB(255, 83, 46, 19),
+    Color.fromARGB(255, 119, 66, 28),
+  ],
+  'grey': [
+    Color.fromARGB(255, 94, 94, 94),
+    Color.fromARGB(255, 114, 114, 114),
+  ],
+};

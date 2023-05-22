@@ -26,6 +26,7 @@ class PfpManager {
   late SpriteGeneric chosenOutfit;
   late String colorBg;
   late String colorSkin;
+  late String colorEyes;
 
   /// Loads all image paths from certain path
   Future<void> _loadAllFiles(String path) async {
@@ -59,6 +60,7 @@ class PfpManager {
     // Default colors
     colorBg = colorOptionsBackground.keys.first;
     colorSkin = colorOptionsSkin.keys.first;
+    colorEyes = colorOptionsEyes.keys.first;
   }
 }
 
@@ -76,6 +78,7 @@ class SpriteBody implements OptionInterface {
   final List<SpriteGeneric> noseOptions = [];
   final List<SpriteGeneric> hairOptions = [];
   final List<SpriteGeneric> outfitOptions = [];
+  String irisPath = '';
 
   void init(String folder) {
     folderPath = folder;
@@ -89,6 +92,7 @@ class SpriteBody implements OptionInterface {
     addGeneric('$rootFolder$folder/noses/', noseOptions, 3);
     addGeneric('$rootFolder$folder/hairs/', hairOptions, 4);
     addGeneric('$rootFolder$folder/outfit/', outfitOptions, 1);
+    irisPath = '$rootFolder$folder/iris/iris.png';
   }
 
   void addGeneric(String fileFolder, List<SpriteGeneric> list, int layer) {

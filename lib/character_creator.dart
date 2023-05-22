@@ -55,6 +55,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
       PfpManager().chosenOutfit = PfpManager().chosenBody.outfitOptions[Random().nextInt(PfpManager().chosenBody.outfitOptions.length)];
       PfpManager().colorBg = colorOptionsBackground.keys.toList()[Random().nextInt(colorOptionsBackground.length)];
       PfpManager().colorSkin = colorOptionsSkin.keys.toList()[Random().nextInt(colorOptionsSkin.length)];
+      PfpManager().colorEyes = colorOptionsEyes.keys.toList()[Random().nextInt(colorOptionsEyes.length)];
     });
   }
 
@@ -184,6 +185,15 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                 selectedColor: PfpManager().colorSkin,
                                 onSelect: (option) {
                                   PfpManager().colorSkin = option as String;
+                                  setState(() {});
+                                },
+                              ),
+                              OptionPicker(
+                                label: 'Eye color',
+                                colorList: colorOptionsEyes,
+                                selectedColor: PfpManager().colorEyes,
+                                onSelect: (option) {
+                                  PfpManager().colorEyes = option as String;
                                   setState(() {});
                                 },
                               ),

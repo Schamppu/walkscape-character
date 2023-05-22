@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -43,6 +44,19 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
     }
   }
 
+  /// Randomizes all of the options
+  void _randomize() {
+    setState(() {
+      PfpManager().chosenBody = PfpManager().optionsBody[Random().nextInt(PfpManager().optionsBody.length)];
+      PfpManager().chosenFace = PfpManager().chosenBody.faceOptions[Random().nextInt(PfpManager().chosenBody.faceOptions.length)];
+      PfpManager().chosenHair = PfpManager().chosenBody.hairOptions[Random().nextInt(PfpManager().chosenBody.hairOptions.length)];
+      PfpManager().chosenNose = PfpManager().chosenBody.noseOptions[Random().nextInt(PfpManager().chosenBody.noseOptions.length)];
+      PfpManager().chosenOutfit = PfpManager().chosenBody.outfitOptions[Random().nextInt(PfpManager().chosenBody.outfitOptions.length)];
+      PfpManager().colorBg = colorOptionsBackground.keys.toList()[Random().nextInt(colorOptionsBackground.length)];
+      PfpManager().colorSkin = colorOptionsSkin.keys.toList()[Random().nextInt(colorOptionsSkin.length)];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQuery.of(context).size.width;
@@ -81,6 +95,12 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              ElevatedButton(
+                                  onPressed: _randomize,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [Icon(Icons.casino), Text('Randomize')],
+                                  )),
                               OptionPicker(
                                 label: 'Body type',
                                 selectedOption: PfpManager().chosenBody,
@@ -142,6 +162,12 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              ElevatedButton(
+                                  onPressed: _randomize,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [Icon(Icons.casino), Text('Randomize')],
+                                  )),
                               OptionPicker(
                                 label: 'Background color',
                                 colorList: colorOptionsBackground,

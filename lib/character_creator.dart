@@ -82,6 +82,9 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                     onSelect: (option) {
                       PfpManager().chosenBody = option as SpriteBody;
                       PfpManager().chosenFace = PfpManager().chosenBody.faceOptions.first;
+                      PfpManager().chosenNose = PfpManager().chosenBody.noseOptions.first;
+                      PfpManager().chosenHair = PfpManager().chosenBody.hairOptions.first;
+                      PfpManager().chosenOutfit = PfpManager().chosenBody.outfitOptions.first;
                       setState(() {});
                     },
                   ),

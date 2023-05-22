@@ -1,5 +1,5 @@
 name: walkscape_characters
-description: A new Flutter project.
+description: WalkScape Character Customisation for profile pictures.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -35,6 +35,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  widgets_to_image: ^0.0.2
+  image_downloader_web: ^2.0.2
 
 dev_dependencies:
   flutter_test:
@@ -57,11 +59,38 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+  - assets/
+  - assets/pfp/
+  - assets/pfp/back_accessories/
+  - assets/pfp/human_a/
+  - assets/pfp/human_a/bodies/
+  - assets/pfp/human_a/eyes/
+  - assets/pfp/human_a/face_accessories/
+  - assets/pfp/human_a/hairs/
+  - assets/pfp/human_a/iris/
+  - assets/pfp/human_a/noses/
+  - assets/pfp/human_a/outfit/
+  - assets/pfp/human_a/face/
+  - assets/pfp/human_a/face/face_1/
+  - assets/pfp/human_a/face/face_2/
+  - assets/pfp/human_a/face/face_3/
+  - assets/pfp/human_a/face/face_4/
+  - assets/pfp/human_a/face/face_5/
+  - assets/pfp/human_a/face/face_6/
+  - assets/pfp/human_b/
+  - assets/pfp/human_b/bodies/
+  - assets/pfp/human_b/eyes/
+  - assets/pfp/human_b/face_accessories/
+  - assets/pfp/human_b/hairs/
+  - assets/pfp/human_b/iris/
+  - assets/pfp/human_b/noses/
+  - assets/pfp/human_b/outfit/
+  - assets/pfp/human_b/face/
+  - assets/pfp/human_b/face/face_1/
+  - assets/pfp/human_b/face/face_2/
+  - assets/pfp/human_b/face/face_3/
+  - assets/pfp/human_b/face/face_4/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

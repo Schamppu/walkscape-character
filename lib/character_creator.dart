@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:walkscape_characters/change_between_views.dart';
 import 'package:walkscape_characters/character_image.dart';
 import 'package:walkscape_characters/option_picker.dart';
@@ -44,6 +45,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -162,17 +164,18 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                           ),
                         ),
                   Row(
+                    mainAxisAlignment: ResponsiveBreakpoints.of(context).isDesktop ? MainAxisAlignment.start : MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 25),
+                        padding: ResponsiveBreakpoints.of(context).isDesktop ? const EdgeInsets.only(left: 25) : const EdgeInsets.all(0),
                         child: SizedBox(
-                          width: 128,
-                          height: 128,
+                          width: ResponsiveBreakpoints.of(context).isDesktop ? 256 : 128,
+                          height: ResponsiveBreakpoints.of(context).isDesktop ? 256 : 128,
                           child: WidgetsToImage(
                               controller: _controller,
                               child: CharacterImage(
-                                width: 128,
-                                height: 128,
+                                width: ResponsiveBreakpoints.of(context).isDesktop ? 256 : 128,
+                                height: ResponsiveBreakpoints.of(context).isDesktop ? 256 : 128,
                                 selectedSprites: [
                                   PfpManager().chosenBody,
                                   PfpManager().chosenFace,

@@ -46,8 +46,11 @@ class CharacterImage extends StatelessWidget {
                                     height: height,
                                     scale: 0.1,
                                     filterQuality: FilterQuality.none,
+                                    frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                                      return child;
+                                    },
                                   )
-                                : const CircularProgressIndicator();
+                                : Center(child: const CircularProgressIndicator());
                           },
                         )
                       : const SizedBox.shrink(),

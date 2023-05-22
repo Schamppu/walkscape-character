@@ -38,6 +38,7 @@ dependencies:
   widgets_to_image: ^0.0.2
   universal_html: ^2.2.2
   image: ^4.0.17
+  responsive_framework: ^1.0.0
 
 dev_dependencies:
   flutter_test:

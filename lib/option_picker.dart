@@ -1,6 +1,7 @@
 import 'dart:js_interop';
 
 import 'package:flutter/material.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:walkscape_characters/option_interface.dart';
 import 'package:walkscape_characters/pfp_manager.dart';
 import 'package:walkscape_characters/vars.dart';
@@ -19,6 +20,8 @@ class OptionPicker extends StatelessWidget {
   void _openSelectionSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height / 6, maxWidth: 800),
       builder: (context) {
         return Container(
           child: Padding(
@@ -35,8 +38,25 @@ class OptionPicker extends StatelessWidget {
                               children: [
                                 Container(
                                     decoration: BoxDecoration(color: colorOptionsBackground[PfpManager().colorBg]![0]),
-                                    child: Image.asset(
-                                        option.runtimeType == SpriteFace ? (option as SpriteFace).expressionOptions[PfpManager().chosenExpression]! : option.spritePath)),
+                                    child: ResponsiveBreakpoints.of(context).isDesktop
+                                        ? Image.asset(
+                                            option.runtimeType == SpriteFace
+                                                ? (option as SpriteFace).expressionOptions[PfpManager().chosenExpression]!
+                                                : option.spritePath,
+                                            width: 128,
+                                            height: 128,
+                                            scale: 0.01,
+                                            filterQuality: FilterQuality.none,
+                                          )
+                                        : Image.asset(
+                                            option.runtimeType == SpriteFace
+                                                ? (option as SpriteFace).expressionOptions[PfpManager().chosenExpression]!
+                                                : option.spritePath,
+                                            width: 64,
+                                            height: 64,
+                                            scale: 0.01,
+                                            filterQuality: FilterQuality.none,
+                                          )),
                                 const SizedBox(
                                   width: 20,
                                 ),

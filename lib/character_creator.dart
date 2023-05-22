@@ -49,6 +49,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
     setState(() {
       PfpManager().chosenBody = PfpManager().optionsBody[Random().nextInt(PfpManager().optionsBody.length)];
       PfpManager().chosenFace = PfpManager().chosenBody.faceOptions[Random().nextInt(PfpManager().chosenBody.faceOptions.length)];
+      PfpManager().chosenExpression = PfpManager().chosenFace.expressionOptions.keys.toList()[Random().nextInt(PfpManager().chosenFace.expressionOptions.length)];
       PfpManager().chosenHair = PfpManager().chosenBody.hairOptions[Random().nextInt(PfpManager().chosenBody.hairOptions.length)];
       PfpManager().chosenNose = PfpManager().chosenBody.noseOptions[Random().nextInt(PfpManager().chosenBody.noseOptions.length)];
       PfpManager().chosenOutfit = PfpManager().chosenBody.outfitOptions[Random().nextInt(PfpManager().chosenBody.outfitOptions.length)];

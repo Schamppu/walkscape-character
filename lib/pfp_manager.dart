@@ -1,7 +1,9 @@
 import 'dart:convert';
-
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walkscape_characters/option_interface.dart';
+import 'package:image/image.dart' as img;
+import 'package:walkscape_characters/vars.dart';
 
 /// Manager that controls the profile picture options and loads them.
 const rootFolder = 'assets/pfp/';
@@ -22,6 +24,8 @@ class PfpManager {
   late SpriteGeneric chosenNose;
   late SpriteGeneric chosenHair;
   late SpriteGeneric chosenOutfit;
+  late String colorBg;
+  late String colorSkin;
 
   /// Loads all image paths from certain path
   Future<void> _loadAllFiles(String path) async {
@@ -52,6 +56,9 @@ class PfpManager {
     chosenNose = chosenBody.noseOptions.first;
     chosenHair = chosenBody.hairOptions.first;
     chosenOutfit = chosenBody.outfitOptions.first;
+    // Default colors
+    colorBg = colorOptionsBackground.keys.first;
+    colorSkin = colorOptionsSkin.keys.first;
   }
 }
 
@@ -75,13 +82,13 @@ class SpriteBody implements OptionInterface {
     final faceFolders = getSubFolders('$rootFolder$folder/face/', imagePaths);
     for (var face in faceFolders) {
       var path = '$rootFolder$folder/face/$face/';
-      var faceAdded = SpriteFace(name: face, spritePath: '', layer: 1);
+      var faceAdded = SpriteFace(name: face, spritePath: '', layer: 2);
       faceOptions.add(faceAdded);
       faceAdded.init(path, face);
     }
-    addGeneric('$rootFolder$folder/noses/', noseOptions, 2);
-    addGeneric('$rootFolder$folder/hairs/', hairOptions, 3);
-    addGeneric('$rootFolder$folder/outfit/', outfitOptions, 4);
+    addGeneric('$rootFolder$folder/noses/', noseOptions, 3);
+    addGeneric('$rootFolder$folder/hairs/', hairOptions, 4);
+    addGeneric('$rootFolder$folder/outfit/', outfitOptions, 1);
   }
 
   void addGeneric(String fileFolder, List<SpriteGeneric> list, int layer) {
@@ -157,4 +164,35 @@ List<String> getFiles(String path, List<String> imagePaths) {
     }
   }
   return returnList;
+}
+
+/// A function that switches the image color.
+Future<Uint8List> switchColorPalette({required String imagePath, required List<Color> existingColors, required List<Color> changeColors}) async {
+  late Uint8List imageBytes;
+
+  await rootBundle.load(imagePath).then((data) => imageBytes = data.buffer.asUint8List());
+
+  // Decode the bytes to [Image] type
+
+  final image = img.decodeImage(imageBytes);
+
+  // Convert the [Image] to RGBA formatted pixels
+  final pixels = image!.getBytes(order: img.ChannelOrder.rgba);
+
+  // Get the Pixel Length
+  final int length = pixels.lengthInBytes;
+
+  for (var i = 0; i < length; i += 4) {
+    for (var c = 0; c < existingColors.length; c++) {
+      var color = existingColors[c];
+      var changeColor = changeColors[c];
+      if (pixels[i] == color.red && pixels[i + 1] == color.green && pixels[i + 2] == color.blue) {
+        pixels[i] = changeColor.red;
+        pixels[i + 1] = changeColor.green;
+        pixels[i + 2] = changeColor.blue;
+        break;
+      }
+    }
+  }
+  return img.encodePng(image);
 }

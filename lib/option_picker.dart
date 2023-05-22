@@ -1,14 +1,20 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:walkscape_characters/option_interface.dart';
 import 'package:walkscape_characters/pfp_manager.dart';
+import 'package:walkscape_characters/vars.dart';
 
 class OptionPicker extends StatelessWidget {
-  const OptionPicker({super.key, required this.selectedOption, required this.optionList, required this.onSelect, required this.label, this.onExpressionSelect});
+  const OptionPicker(
+      {super.key, this.selectedOption, this.optionList, required this.onSelect, required this.label, this.onExpressionSelect, this.colorList, this.selectedColor});
   final String label;
-  final OptionInterface selectedOption;
-  final List<OptionInterface> optionList;
-  final Function(OptionInterface option) onSelect;
+  final OptionInterface? selectedOption;
+  final List<OptionInterface>? optionList;
+  final Function(dynamic option) onSelect;
   final Function(String option)? onExpressionSelect;
+  final Map<String, List<Color>>? colorList;
+  final String? selectedColor;
 
   void _openSelectionSheet(BuildContext context) {
     showModalBottomSheet(
@@ -19,33 +25,58 @@ class OptionPicker extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(vertical: 25),
-              child: Column(
-                children: [
-                  for (var option in optionList)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Container(
-                              decoration: BoxDecoration(color: Colors.amber[300]),
-                              child: Image.asset(
-                                  option.runtimeType == SpriteFace ? (option as SpriteFace).expressionOptions[PfpManager().chosenExpression]! : option.spritePath)),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Text(option.name),
-                          const Spacer(),
-                          ElevatedButton(
-                              onPressed: () {
-                                onSelect(option);
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Select')),
-                        ],
-                      ),
+              child: colorList.isNull
+                  ? Column(
+                      children: [
+                        for (var option in optionList!)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Container(
+                                    decoration: BoxDecoration(color: colorOptionsBackground[PfpManager().colorBg]![0]),
+                                    child: Image.asset(
+                                        option.runtimeType == SpriteFace ? (option as SpriteFace).expressionOptions[PfpManager().chosenExpression]! : option.spritePath)),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Text(option.name),
+                                const Spacer(),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      onSelect(option);
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Select')),
+                              ],
+                            ),
+                          )
+                      ],
                     )
-                ],
-              ),
+                  : Column(
+                      children: [
+                        for (var colorEntry in colorList!.entries)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Container(width: 32, height: 32, decoration: BoxDecoration(color: colorOptionsBackground[colorEntry.key]![0])),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Text(colorEntry.key),
+                                const Spacer(),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      onSelect(colorEntry.key);
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Select')),
+                              ],
+                            ),
+                          )
+                      ],
+                    ),
             ),
           ),
         );
@@ -54,26 +85,48 @@ class OptionPicker extends StatelessWidget {
   }
 
   /// Returns the previous option in list
-  OptionInterface _getPrevious() {
-    var index = optionList.indexOf(selectedOption);
-    if (index == 0) {
-      index = optionList.length - 1;
+  dynamic _getPrevious() {
+    dynamic returnValue;
+    if (colorList.isNull) {
+      var index = optionList!.indexOf(selectedOption!);
+      if (index == 0) {
+        index = optionList!.length - 1;
+      } else {
+        index--;
+      }
+      returnValue = optionList![index];
     } else {
-      index--;
+      var index = colorList!.keys.toList().indexOf(selectedColor!);
+      if (index == 0) {
+        index = colorList!.length - 1;
+      } else {
+        index--;
+      }
+      returnValue = colorList!.keys.toList()[index];
     }
-    var returnValue = optionList[index];
     return returnValue;
   }
 
   /// Returns the next option in list
-  OptionInterface _getNext() {
-    var index = optionList.indexOf(selectedOption);
-    if (index >= optionList.length - 1) {
-      index = 0;
+  dynamic _getNext() {
+    dynamic returnValue;
+    if (colorList.isNull) {
+      var index = optionList!.indexOf(selectedOption!);
+      if (index >= optionList!.length - 1) {
+        index = 0;
+      } else {
+        index++;
+      }
+      returnValue = optionList![index];
     } else {
-      index++;
+      var index = colorList!.keys.toList().indexOf(selectedColor!);
+      if (index >= colorList!.length - 1) {
+        index = 0;
+      } else {
+        index++;
+      }
+      returnValue = colorList!.keys.toList()[index];
     }
-    var returnValue = optionList[index];
     return returnValue;
   }
 
@@ -90,7 +143,7 @@ class OptionPicker extends StatelessWidget {
               children: [
                 SizedBox(width: 200, child: Center(child: Text(label))),
                 const Divider(),
-                ElevatedButton(onPressed: () => _openSelectionSheet(context), child: Text(selectedOption.name)),
+                ElevatedButton(onPressed: () => _openSelectionSheet(context), child: colorList.isNull ? Text(selectedOption!.name) : Text(selectedColor!)),
                 const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -37,20 +37,29 @@
     var serviceWorkerVersion = null;
   </script>
   <!-- This script adds the flutter initialization JS code -->
+  <script src="https://cdn.jsdelivr.net/g/filesaver.js"></script> 
   <script src="flutter.js" defer></script>
 </head>
 <body>
   <script>
     window.addEventListener('load', function(ev) {
-      // Download main.dart.js
+      let useHtml = false
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         },
-        onEntrypointLoaded: function(engineInitializer) {
+        onEntrypointLoaded: async function(engineInitializer) {
+          let config = {
+            renderer: useHtml ? "html" : "canvaskit",
+          }
+          let appRunner = await engineInitializer.initializeEngine(config);
+        await appRunner.runApp();
+
+          /*
           engineInitializer.initializeEngine().then(function(appRunner) {
             appRunner.runApp();
           });
+          */
         }
       });
     });

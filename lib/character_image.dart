@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:walkscape_characters/option_interface.dart';
 import 'package:walkscape_characters/pfp_manager.dart';
 
 class CharacterImage extends StatelessWidget {
-  const CharacterImage({super.key, required this.width, required this.height});
+  const CharacterImage({super.key, required this.width, required this.height, required this.selectedSprites});
   final double width;
   final double height;
+  final List<OptionInterface> selectedSprites;
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +18,17 @@ class CharacterImage extends StatelessWidget {
           decoration: BoxDecoration(color: Colors.amber[300]),
           child: Stack(
             children: [
-              Image.asset(
-                PfpManager().chosenBody.spritePath,
-                width: width,
-                height: height,
-                scale: 0.01,
-                filterQuality: FilterQuality.none,
-              ),
+              for (var i = 0; i < 15; i++)
+                for (var sprite in selectedSprites)
+                  sprite.layer == i
+                      ? Image.asset(
+                          PfpManager().chosenBody.spritePath,
+                          width: width,
+                          height: height,
+                          scale: 0.01,
+                          filterQuality: FilterQuality.none,
+                        )
+                      : const SizedBox.shrink(),
             ],
           ),
         )

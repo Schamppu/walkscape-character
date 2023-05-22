@@ -60,7 +60,7 @@ class OptionPicker extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
                               children: [
-                                Container(width: 32, height: 32, decoration: BoxDecoration(color: colorOptionsBackground[colorEntry.key]![0])),
+                                for (var color in colorEntry.value) Container(width: 20, height: 20, decoration: BoxDecoration(color: color)),
                                 const SizedBox(
                                   width: 20,
                                 ),

@@ -348,7 +348,7 @@ const colorOptionsHair = {
 const colorOptionsFacialHair = {
   'darker brown': [
     Color.fromARGB(255, 61, 41, 54),
-    Color.fromARGB(255, 82, 52, 63),
+    Color.fromARGB(255, 82, 51, 63),
   ],
   'dark brown': [
     Color.fromARGB(255, 59, 32, 39),

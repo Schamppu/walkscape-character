@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:walkscape_characters/character_creator.dart';
+import 'package:walkscape_characters/page_intro.dart';
 import 'package:walkscape_characters/pfp_manager.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         const Breakpoint(start: 451, end: 950, name: TABLET),
         const Breakpoint(start: 951, end: double.infinity, name: DESKTOP),
       ]),
-      home: const PageCharacterCreator(title: 'WalkScape Character Creator'),
+      home: const PageIntro(),
     );
   }
 }

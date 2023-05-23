@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -52,7 +53,7 @@ class PageIntro extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: SvgPicture.asset(
-                      'assets/logo_cutcorners.svg',
+                      kDebugMode ? 'logo_cutcorners.svg' : 'assets/logo_cutcorners.svg',
                       semanticsLabel: 'WalkScape logo',
                       width: ResponsiveBreakpoints.of(context).isDesktop ? 128 : 64,
                       height: ResponsiveBreakpoints.of(context).isDesktop ? 128 : 64,

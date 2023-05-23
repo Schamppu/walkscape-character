@@ -58,15 +58,26 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
       !PfpManager().lockedOptions['expression']!
           ? PfpManager().chosenExpression = PfpManager().chosenFace.expressionOptions.keys.toList()[Random().nextInt(PfpManager().chosenFace.expressionOptions.length)]
           : null;
+      // Hair randomisation
+      var previousHair = PfpManager().chosenHair;
       !PfpManager().lockedOptions['hair']!
           ? PfpManager().chosenHair = PfpManager().chosenBody.hairOptions[Random().nextInt(PfpManager().chosenBody.hairOptions.length)]
           : null;
+      _randomizeVariant(PfpManager().chosenHair, previousHair);
+
+      // Nose randomisation
+      var previousNose = PfpManager().chosenOutfit;
       !PfpManager().lockedOptions['nose']!
           ? PfpManager().chosenNose = PfpManager().chosenBody.noseOptions[Random().nextInt(PfpManager().chosenBody.noseOptions.length)]
           : null;
+      _randomizeVariant(PfpManager().chosenNose, previousNose);
+
+      // Outfit randomisation
+      var previousOutfit = PfpManager().chosenOutfit;
       !PfpManager().lockedOptions['outfit']!
           ? PfpManager().chosenOutfit = PfpManager().chosenBody.outfitOptions[Random().nextInt(PfpManager().chosenBody.outfitOptions.length)]
           : null;
+      _randomizeVariant(PfpManager().chosenOutfit, previousOutfit);
       !PfpManager().lockedOptions['colorBG']! ? PfpManager().colorBg = colorOptionsBackground.keys.toList()[Random().nextInt(colorOptionsBackground.length)] : null;
       !PfpManager().lockedOptions['colorSkin']! ? PfpManager().colorSkin = colorOptionsSkin.keys.toList()[Random().nextInt(colorOptionsSkin.length)] : null;
       !PfpManager().lockedOptions['colorEyes']! ? PfpManager().colorEyes = colorOptionsEyes.keys.toList()[Random().nextInt(colorOptionsEyes.length)] : null;
@@ -78,6 +89,13 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
           ? PfpManager().colorFacialHair = colorOptionsFacialHair.keys.toList()[Random().nextInt(colorOptionsFacialHair.length)]
           : null;
     });
+  }
+
+  void _randomizeVariant(SpriteGeneric sprite, SpriteGeneric previousSprite) {
+    previousSprite.chosenVariant = null;
+    if (sprite.variants.isNotEmpty) {
+      sprite.chosenVariant = sprite.variants.keys.toList()[Random().nextInt(sprite.variants.length)];
+    }
   }
 
   @override
@@ -152,6 +170,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                   optionList: PfpManager().chosenBody.noseOptions,
                                   lockKey: 'nose',
                                   onSelect: (option) {
+                                    PfpManager().chosenNose.chosenVariant = null;
                                     PfpManager().chosenNose = option as SpriteGeneric;
                                     setState(() {});
                                   },
@@ -162,6 +181,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                   optionList: PfpManager().chosenBody.hairOptions,
                                   lockKey: 'hair',
                                   onSelect: (option) {
+                                    PfpManager().chosenHair.chosenVariant = null;
                                     PfpManager().chosenHair = option as SpriteGeneric;
                                     setState(() {});
                                   },
@@ -172,7 +192,16 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                   optionList: PfpManager().chosenBody.outfitOptions,
                                   lockKey: 'outfit',
                                   onSelect: (option) {
+                                    PfpManager().chosenOutfit.chosenVariant = null;
                                     PfpManager().chosenOutfit = option as SpriteGeneric;
+                                    setState(() {});
+                                  },
+                                  onVariantSelect: (option) {
+                                    if (option == 'none') {
+                                      PfpManager().chosenOutfit.chosenVariant = null;
+                                    } else {
+                                      PfpManager().chosenOutfit.chosenVariant = option;
+                                    }
                                     setState(() {});
                                   },
                                 ),

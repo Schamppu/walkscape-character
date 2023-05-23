@@ -47,17 +47,30 @@ class CharacterImage extends StatelessWidget {
     for (var i = 0; i < 15; i++) {
       for (var sprite in selectedSprites) {
         if (sprite.layer == i) {
-          returnList.add(Stack(
-            children: [
-              // The default sprite of this layer
-              buildSprite(sprite.runtimeType == SpriteFace ? (sprite as SpriteFace).expressionOptions[PfpManager().chosenExpression]! : sprite.spritePath,
-                  getDefaultColor(sprite), getChangedColor(sprite), width, height),
-              // The iris layer
-              (sprite.runtimeType == SpriteFace && PfpManager().chosenExpression != 'sad' && PfpManager().chosenExpression != 'laughing')
-                  ? buildSprite(PfpManager().chosenBody.irisPath, colorOptionsEyes['black']!, colorOptionsEyes[PfpManager().colorEyes]!, width, height)
-                  : const SizedBox.shrink(),
-            ],
-          ));
+          if (sprite.runtimeType == SpriteGeneric) {
+            if ((sprite as SpriteGeneric).chosenVariant != null) {
+              returnList.add(
+                buildSprite(sprite.variants[sprite.chosenVariant]!, getDefaultColor(sprite), getChangedColor(sprite), width, height),
+              );
+            } else {
+              returnList.add(
+                buildSprite(sprite.runtimeType == SpriteFace ? (sprite as SpriteFace).expressionOptions[PfpManager().chosenExpression]! : sprite.spritePath,
+                    getDefaultColor(sprite), getChangedColor(sprite), width, height),
+              );
+            }
+          } else {
+            returnList.add(Stack(
+              children: [
+                // The default sprite of this layer
+                buildSprite(sprite.runtimeType == SpriteFace ? (sprite as SpriteFace).expressionOptions[PfpManager().chosenExpression]! : sprite.spritePath,
+                    getDefaultColor(sprite), getChangedColor(sprite), width, height),
+                // The iris layer
+                (sprite.runtimeType == SpriteFace && PfpManager().chosenExpression != 'sad' && PfpManager().chosenExpression != 'laughing')
+                    ? buildSprite(PfpManager().chosenBody.irisPath, colorOptionsEyes['black']!, colorOptionsEyes[PfpManager().colorEyes]!, width, height)
+                    : const SizedBox.shrink(),
+              ],
+            ));
+          }
         }
       }
       // Check for the supplementary sprites

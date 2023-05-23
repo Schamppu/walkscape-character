@@ -133,13 +133,20 @@ class SpriteBody implements OptionInterface {
     for (var option in files) {
       var path = '$fileFolder/$option';
       var optionAdded = SpriteGeneric(name: option.replaceAll('.png', ''), spritePath: path, layer: layer, supplementaryLayer: supplementaryLayer, type: type);
-      if (optionAdded.name.contains('_supp')) {
-        var index = list.indexWhere((sprite) => sprite.name.contains(option.replaceAll('_supp.png', '')));
+      if (optionAdded.name.contains('_var')) {
+        var index = list.indexWhere((sprite) => sprite.name.contains(option.split('_var')[0]));
         if (index != -1) {
-          list[index].supplementaryPath = path;
+          list[index].variants.addAll({'variant ${list[index].variants.length + 1}': path});
         }
       } else {
-        list.add(optionAdded);
+        if (optionAdded.name.contains('_supp')) {
+          var index = list.indexWhere((sprite) => sprite.name.contains(option.replaceAll('_supp.png', '')));
+          if (index != -1) {
+            list[index].supplementaryPath = path;
+          }
+        } else {
+          list.add(optionAdded);
+        }
       }
     }
   }
@@ -179,6 +186,9 @@ class SpriteGeneric implements OptionInterface {
 
   /// For supplementary sprites that should be drawn to other layers
   String? supplementaryPath;
+
+  Map<String, String> variants = {};
+  String? chosenVariant;
 
   /// The layer index of the supplementary layers
   final int? supplementaryLayer;

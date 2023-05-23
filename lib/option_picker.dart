@@ -15,6 +15,7 @@ class OptionPicker extends StatefulWidget {
       required this.onSelect,
       required this.label,
       this.onExpressionSelect,
+      this.onVariantSelect,
       this.colorList,
       this.selectedColor,
       required this.lockKey});
@@ -23,6 +24,7 @@ class OptionPicker extends StatefulWidget {
   final List<OptionInterface>? optionList;
   final Function(dynamic option) onSelect;
   final Function(String option)? onExpressionSelect;
+  final Function(String option)? onVariantSelect;
   final Map<String, List<Color>>? colorList;
   final String? selectedColor;
   final String lockKey;
@@ -165,6 +167,21 @@ class _OptionPickerState extends State<OptionPicker> {
     return returnValue;
   }
 
+  List<DropdownMenuEntry<String>> _getVariantList() {
+    var list = (widget.selectedOption as SpriteGeneric).variants.keys.map<DropdownMenuEntry<String>>((String value) {
+      return DropdownMenuEntry<String>(
+        value: value,
+        label: value,
+        trailingIcon: Image.asset((widget.selectedOption as SpriteGeneric).variants[value]!),
+      );
+    }).toList();
+    list.add(DropdownMenuEntry<String>(
+      value: 'none',
+      label: 'none',
+    ));
+    return list;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -287,6 +304,66 @@ class _OptionPickerState extends State<OptionPicker> {
                             ],
                           )
                         ],
+                      )
+                    : const SizedBox.shrink(),
+
+                // Showing the variant selection if there are variants for the sprite
+                widget.selectedOption.runtimeType == SpriteGeneric
+                    ? SizedBox(
+                        child: (widget.selectedOption! as SpriteGeneric).variants.isNotEmpty
+                            ? Column(
+                                children: [
+                                  const Divider(),
+                                  Stack(
+                                    children: [
+                                      SizedBox(
+                                        width: getCardWidth(),
+                                        height: 60,
+                                      ),
+                                      Positioned.fill(
+                                        child: Center(
+                                          child: DropdownMenu<String>(
+                                            enableSearch: false,
+                                            enableFilter: false,
+                                            initialSelection: (widget.selectedOption! as SpriteGeneric).chosenVariant ?? 'none',
+                                            width: 130,
+                                            label: Text(
+                                              'Variant',
+                                              style: Theme.of(context).textTheme.labelLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
+                                            ),
+                                            dropdownMenuEntries: _getVariantList(),
+                                            onSelected: (value) {
+                                              if (value != null && widget.onVariantSelect != null) {
+                                                widget.onVariantSelect!(value);
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                          right: 0,
+                                          top: 0,
+                                          bottom: 0,
+                                          child: IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  PfpManager().lockedOptions['expression'] = !PfpManager().lockedOptions['expression']!;
+                                                });
+                                              },
+                                              icon: PfpManager().lockedOptions['expression']!
+                                                  ? Icon(
+                                                      Icons.lock,
+                                                      color: Theme.of(context).colorScheme.primary,
+                                                    )
+                                                  : Icon(
+                                                      Icons.lock_open,
+                                                      color: Theme.of(context).colorScheme.primary,
+                                                    )))
+                                    ],
+                                  )
+                                ],
+                              )
+                            : const SizedBox.shrink(),
                       )
                     : const SizedBox.shrink(),
               ],

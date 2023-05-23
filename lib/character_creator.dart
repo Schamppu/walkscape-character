@@ -70,6 +70,13 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
       !PfpManager().lockedOptions['colorBG']! ? PfpManager().colorBg = colorOptionsBackground.keys.toList()[Random().nextInt(colorOptionsBackground.length)] : null;
       !PfpManager().lockedOptions['colorSkin']! ? PfpManager().colorSkin = colorOptionsSkin.keys.toList()[Random().nextInt(colorOptionsSkin.length)] : null;
       !PfpManager().lockedOptions['colorEyes']! ? PfpManager().colorEyes = colorOptionsEyes.keys.toList()[Random().nextInt(colorOptionsEyes.length)] : null;
+      !PfpManager().lockedOptions['colorHair']! ? PfpManager().colorHair = colorOptionsHair.keys.toList()[Random().nextInt(colorOptionsHair.length)] : null;
+      !PfpManager().lockedOptions['colorEyebrown']!
+          ? PfpManager().colorEyeBrown = colorOptionsEyebrowns.keys.toList()[Random().nextInt(colorOptionsEyebrowns.length)]
+          : null;
+      !PfpManager().lockedOptions['colorFacialHair']!
+          ? PfpManager().colorFacialHair = colorOptionsFacialHair.keys.toList()[Random().nextInt(colorOptionsFacialHair.length)]
+          : null;
     });
   }
 
@@ -207,6 +214,36 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                   lockKey: 'colorEyes',
                                   onSelect: (option) {
                                     PfpManager().colorEyes = option as String;
+                                    setState(() {});
+                                  },
+                                ),
+                                OptionPicker(
+                                  label: 'Hair color',
+                                  colorList: colorOptionsHair,
+                                  selectedColor: PfpManager().colorHair,
+                                  lockKey: 'colorHair',
+                                  onSelect: (option) {
+                                    PfpManager().colorHair = option as String;
+                                    setState(() {});
+                                  },
+                                ),
+                                OptionPicker(
+                                  label: 'Eyebrown color',
+                                  colorList: colorOptionsEyebrowns,
+                                  selectedColor: PfpManager().colorEyeBrown,
+                                  lockKey: 'colorEyebrown',
+                                  onSelect: (option) {
+                                    PfpManager().colorEyeBrown = option as String;
+                                    setState(() {});
+                                  },
+                                ),
+                                OptionPicker(
+                                  label: 'Facial hair color',
+                                  colorList: colorOptionsFacialHair,
+                                  selectedColor: PfpManager().colorFacialHair,
+                                  lockKey: 'colorFacialHair',
+                                  onSelect: (option) {
+                                    PfpManager().colorFacialHair = option as String;
                                     setState(() {});
                                   },
                                 ),

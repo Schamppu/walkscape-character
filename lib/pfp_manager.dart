@@ -27,6 +27,9 @@ class PfpManager {
   late String colorBg;
   late String colorSkin;
   late String colorEyes;
+  late String colorHair;
+  late String colorEyeBrown;
+  late String colorFacialHair;
 
   Map<String, bool> lockedOptions = {
     'body': false,
@@ -38,6 +41,9 @@ class PfpManager {
     'colorBG': false,
     'colorSkin': false,
     'colorEyes': false,
+    'colorHair': false,
+    'colorEyebrown': false,
+    'colorFacialHair': false,
   };
 
   /// Loads all image paths from certain path
@@ -59,7 +65,7 @@ class PfpManager {
     final bodyFolders = getSubFolders(rootFolder, imagePaths);
     bodyFolders.remove('back_accessories');
     for (var folder in bodyFolders) {
-      final addedBody = SpriteBody(name: folder, spritePath: '$rootFolder$folder/bodies/body.png', layer: 0);
+      final addedBody = SpriteBody(name: folder, spritePath: '$rootFolder$folder/bodies/body.png', layer: layerBody);
       optionsBody.add(addedBody);
       addedBody.init(folder);
     }
@@ -73,9 +79,13 @@ class PfpManager {
     colorBg = colorOptionsBackground.keys.first;
     colorSkin = colorOptionsSkin.keys.first;
     colorEyes = colorOptionsEyes.keys.first;
+    colorHair = colorOptionsHair.keys.first;
+    colorEyeBrown = colorOptionsEyebrowns.keys.first;
+    colorFacialHair = colorOptionsFacialHair.keys.first;
   }
 }
 
+/// Body layer sprite. Also controls the options, as they are dependent on the body.
 class SpriteBody implements OptionInterface {
   SpriteBody({required this.name, required this.spritePath, required this.layer});
   @override
@@ -97,26 +107,45 @@ class SpriteBody implements OptionInterface {
     final faceFolders = getSubFolders('$rootFolder$folder/face/', imagePaths);
     for (var face in faceFolders) {
       var path = '$rootFolder$folder/face/$face/';
-      var faceAdded = SpriteFace(name: face, spritePath: '', layer: 2);
+      var faceAdded = SpriteFace(name: face, spritePath: '', layer: layerFace);
       faceOptions.add(faceAdded);
       faceAdded.init(path, face);
     }
-    addGeneric('$rootFolder$folder/noses/', noseOptions, 3);
-    addGeneric('$rootFolder$folder/hairs/', hairOptions, 4);
-    addGeneric('$rootFolder$folder/outfit/', outfitOptions, 1);
+    addGeneric('$rootFolder$folder/noses/', noseOptions, layerNose, null, 'nose');
+    addGeneric('$rootFolder$folder/hairs/', hairOptions, layerNose, layerHairSupp, 'hair');
+    addGeneric('$rootFolder$folder/outfit/', outfitOptions, layerOutfit, null, 'outfit');
+    faceOptions.sort(sortByNames);
+    noseOptions.sort(sortByNames);
+    hairOptions.sort(sortByNames);
+    outfitOptions.sort(sortByNames);
     irisPath = '$rootFolder$folder/iris/iris.png';
   }
 
-  void addGeneric(String fileFolder, List<SpriteGeneric> list, int layer) {
+  int sortByNames(OptionInterface a, OptionInterface b) {
+    if (a.name.length > b.name.length) {
+      return 1;
+    }
+    return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+  }
+
+  void addGeneric(String fileFolder, List<SpriteGeneric> list, int layer, int? supplementaryLayer, String type) {
     final files = getFiles(fileFolder, imagePaths);
     for (var option in files) {
       var path = '$fileFolder/$option';
-      var optionAdded = SpriteGeneric(name: option.replaceAll('.png', ''), spritePath: path, layer: layer);
-      list.add(optionAdded);
+      var optionAdded = SpriteGeneric(name: option.replaceAll('.png', ''), spritePath: path, layer: layer, supplementaryLayer: supplementaryLayer, type: type);
+      if (optionAdded.name.contains('_supp')) {
+        var index = list.indexWhere((sprite) => sprite.name.contains(option.replaceAll('_supp.png', '')));
+        if (index != -1) {
+          list[index].supplementaryPath = path;
+        }
+      } else {
+        list.add(optionAdded);
+      }
     }
   }
 }
 
+/// Face layer sprite
 class SpriteFace implements OptionInterface {
   SpriteFace({required this.name, required this.spritePath, required this.layer});
   @override
@@ -138,14 +167,23 @@ class SpriteFace implements OptionInterface {
   }
 }
 
+/// A generic layer sprite
 class SpriteGeneric implements OptionInterface {
-  SpriteGeneric({required this.name, required this.spritePath, required this.layer});
+  SpriteGeneric({required this.name, required this.spritePath, required this.layer, this.supplementaryLayer, required this.type});
   @override
   final String name;
   @override
   final String spritePath;
   @override
   final int layer;
+
+  /// For supplementary sprites that should be drawn to other layers
+  String? supplementaryPath;
+
+  /// The layer index of the supplementary layers
+  final int? supplementaryLayer;
+
+  final String type;
 }
 
 /// Returns all subfolders from a certain path

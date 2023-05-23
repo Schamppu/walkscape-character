@@ -86,6 +86,5 @@ class _ChangeBetweenViewsButtonState extends State<ChangeBetweenViewsButton> {
               ],
             ),
           );
-    ;
   }
 }

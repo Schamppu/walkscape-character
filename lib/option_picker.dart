@@ -6,9 +6,17 @@ import 'package:walkscape_characters/option_interface.dart';
 import 'package:walkscape_characters/pfp_manager.dart';
 import 'package:walkscape_characters/vars.dart';
 
-class OptionPicker extends StatelessWidget {
+class OptionPicker extends StatefulWidget {
   const OptionPicker(
-      {super.key, this.selectedOption, this.optionList, required this.onSelect, required this.label, this.onExpressionSelect, this.colorList, this.selectedColor});
+      {super.key,
+      this.selectedOption,
+      this.optionList,
+      required this.onSelect,
+      required this.label,
+      this.onExpressionSelect,
+      this.colorList,
+      this.selectedColor,
+      required this.lockKey});
   final String label;
   final OptionInterface? selectedOption;
   final List<OptionInterface>? optionList;
@@ -16,7 +24,13 @@ class OptionPicker extends StatelessWidget {
   final Function(String option)? onExpressionSelect;
   final Map<String, List<Color>>? colorList;
   final String? selectedColor;
+  final String lockKey;
 
+  @override
+  State<OptionPicker> createState() => _OptionPickerState();
+}
+
+class _OptionPickerState extends State<OptionPicker> {
   void _openSelectionSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -28,10 +42,10 @@ class OptionPicker extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(vertical: 25),
-              child: colorList.isNull
+              child: widget.colorList.isNull
                   ? Column(
                       children: [
-                        for (var option in optionList!)
+                        for (var option in widget.optionList!)
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
@@ -64,7 +78,7 @@ class OptionPicker extends StatelessWidget {
                                 const Spacer(),
                                 ElevatedButton(
                                     onPressed: () {
-                                      onSelect(option);
+                                      widget.onSelect(option);
                                       Navigator.pop(context);
                                     },
                                     child: const Text('Select')),
@@ -75,7 +89,7 @@ class OptionPicker extends StatelessWidget {
                     )
                   : Column(
                       children: [
-                        for (var colorEntry in colorList!.entries)
+                        for (var colorEntry in widget.colorList!.entries)
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
@@ -88,7 +102,7 @@ class OptionPicker extends StatelessWidget {
                                 const Spacer(),
                                 ElevatedButton(
                                     onPressed: () {
-                                      onSelect(colorEntry.key);
+                                      widget.onSelect(colorEntry.key);
                                       Navigator.pop(context);
                                     },
                                     child: const Text('Select')),
@@ -107,22 +121,22 @@ class OptionPicker extends StatelessWidget {
   /// Returns the previous option in list
   dynamic _getPrevious() {
     dynamic returnValue;
-    if (colorList.isNull) {
-      var index = optionList!.indexOf(selectedOption!);
+    if (widget.colorList.isNull) {
+      var index = widget.optionList!.indexOf(widget.selectedOption!);
       if (index == 0) {
-        index = optionList!.length - 1;
+        index = widget.optionList!.length - 1;
       } else {
         index--;
       }
-      returnValue = optionList![index];
+      returnValue = widget.optionList![index];
     } else {
-      var index = colorList!.keys.toList().indexOf(selectedColor!);
+      var index = widget.colorList!.keys.toList().indexOf(widget.selectedColor!);
       if (index == 0) {
-        index = colorList!.length - 1;
+        index = widget.colorList!.length - 1;
       } else {
         index--;
       }
-      returnValue = colorList!.keys.toList()[index];
+      returnValue = widget.colorList!.keys.toList()[index];
     }
     return returnValue;
   }
@@ -130,22 +144,22 @@ class OptionPicker extends StatelessWidget {
   /// Returns the next option in list
   dynamic _getNext() {
     dynamic returnValue;
-    if (colorList.isNull) {
-      var index = optionList!.indexOf(selectedOption!);
-      if (index >= optionList!.length - 1) {
+    if (widget.colorList.isNull) {
+      var index = widget.optionList!.indexOf(widget.selectedOption!);
+      if (index >= widget.optionList!.length - 1) {
         index = 0;
       } else {
         index++;
       }
-      returnValue = optionList![index];
+      returnValue = widget.optionList![index];
     } else {
-      var index = colorList!.keys.toList().indexOf(selectedColor!);
-      if (index >= colorList!.length - 1) {
+      var index = widget.colorList!.keys.toList().indexOf(widget.selectedColor!);
+      if (index >= widget.colorList!.length - 1) {
         index = 0;
       } else {
         index++;
       }
-      returnValue = colorList!.keys.toList()[index];
+      returnValue = widget.colorList!.keys.toList()[index];
     }
     return returnValue;
   }
@@ -161,16 +175,42 @@ class OptionPicker extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                SizedBox(width: 200, child: Center(child: Text(label))),
-                const Divider(),
-                ElevatedButton(onPressed: () => _openSelectionSheet(context), child: colorList.isNull ? Text(selectedOption!.name) : Text(selectedColor!)),
+                Center(
+                    child: Stack(
+                  children: [
+                    const SizedBox(
+                      width: 200,
+                      height: 40,
+                    ),
+                    Positioned.fill(child: Center(child: Text(widget.label))),
+                    Positioned(
+                        right: 0,
+                        child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                PfpManager().lockedOptions[widget.lockKey] = !PfpManager().lockedOptions[widget.lockKey]!;
+                              });
+                            },
+                            icon: PfpManager().lockedOptions[widget.lockKey]!
+                                ? Icon(
+                                    Icons.lock,
+                                    color: Theme.of(context).primaryColor,
+                                  )
+                                : Icon(
+                                    Icons.lock_open,
+                                    color: Theme.of(context).primaryColor,
+                                  )))
+                  ],
+                )),
+                ElevatedButton(
+                    onPressed: () => _openSelectionSheet(context), child: widget.colorList.isNull ? Text(widget.selectedOption!.name) : Text(widget.selectedColor!)),
                 const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
                         onPressed: () {
-                          onSelect(_getPrevious());
+                          widget.onSelect(_getPrevious());
                         },
                         icon: Icon(
                           Icons.arrow_back_rounded,
@@ -178,7 +218,7 @@ class OptionPicker extends StatelessWidget {
                         )),
                     IconButton(
                         onPressed: () {
-                          onSelect(_getNext());
+                          widget.onSelect(_getNext());
                         },
                         icon: Icon(
                           Icons.arrow_forward_rounded,
@@ -186,30 +226,59 @@ class OptionPicker extends StatelessWidget {
                         )),
                   ],
                 ),
-                selectedOption.runtimeType == SpriteFace
+                widget.selectedOption.runtimeType == SpriteFace
                     ? Column(
                         children: [
                           const Divider(),
-                          DropdownButton<String>(
-                            value: PfpManager().chosenExpression,
-                            icon: const Icon(Icons.arrow_downward),
-                            elevation: 16,
-                            style: const TextStyle(color: Colors.deepPurple),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.deepPurpleAccent,
-                            ),
-                            onChanged: (String? value) {
-                              if (value != null && onExpressionSelect != null) {
-                                onExpressionSelect!(value);
-                              }
-                            },
-                            items: (selectedOption as SpriteFace).expressionOptions.keys.map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
+                          Stack(
+                            children: [
+                              const SizedBox(
+                                width: 200,
+                                height: 40,
+                              ),
+                              Positioned.fill(
+                                child: Center(
+                                  child: DropdownButton<String>(
+                                    value: PfpManager().chosenExpression,
+                                    icon: const Icon(Icons.arrow_downward),
+                                    elevation: 16,
+                                    style: const TextStyle(color: Colors.deepPurple),
+                                    underline: Container(
+                                      height: 2,
+                                      color: Colors.deepPurpleAccent,
+                                    ),
+                                    onChanged: (String? value) {
+                                      if (value != null && widget.onExpressionSelect != null) {
+                                        widget.onExpressionSelect!(value);
+                                      }
+                                    },
+                                    items: (widget.selectedOption as SpriteFace).expressionOptions.keys.map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                  right: 0,
+                                  child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          PfpManager().lockedOptions['expression'] = !PfpManager().lockedOptions['expression']!;
+                                        });
+                                      },
+                                      icon: PfpManager().lockedOptions['expression']!
+                                          ? Icon(
+                                              Icons.lock,
+                                              color: Theme.of(context).primaryColor,
+                                            )
+                                          : Icon(
+                                              Icons.lock_open,
+                                              color: Theme.of(context).primaryColor,
+                                            )))
+                            ],
                           )
                         ],
                       )

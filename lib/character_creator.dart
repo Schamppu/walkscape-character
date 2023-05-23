@@ -47,15 +47,25 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
   /// Randomizes all of the options
   void _randomize() {
     setState(() {
-      PfpManager().chosenBody = PfpManager().optionsBody[Random().nextInt(PfpManager().optionsBody.length)];
-      PfpManager().chosenFace = PfpManager().chosenBody.faceOptions[Random().nextInt(PfpManager().chosenBody.faceOptions.length)];
-      PfpManager().chosenExpression = PfpManager().chosenFace.expressionOptions.keys.toList()[Random().nextInt(PfpManager().chosenFace.expressionOptions.length)];
-      PfpManager().chosenHair = PfpManager().chosenBody.hairOptions[Random().nextInt(PfpManager().chosenBody.hairOptions.length)];
-      PfpManager().chosenNose = PfpManager().chosenBody.noseOptions[Random().nextInt(PfpManager().chosenBody.noseOptions.length)];
-      PfpManager().chosenOutfit = PfpManager().chosenBody.outfitOptions[Random().nextInt(PfpManager().chosenBody.outfitOptions.length)];
-      PfpManager().colorBg = colorOptionsBackground.keys.toList()[Random().nextInt(colorOptionsBackground.length)];
-      PfpManager().colorSkin = colorOptionsSkin.keys.toList()[Random().nextInt(colorOptionsSkin.length)];
-      PfpManager().colorEyes = colorOptionsEyes.keys.toList()[Random().nextInt(colorOptionsEyes.length)];
+      !PfpManager().lockedOptions['body']! ? PfpManager().chosenBody = PfpManager().optionsBody[Random().nextInt(PfpManager().optionsBody.length)] : null;
+      !PfpManager().lockedOptions['face']!
+          ? PfpManager().chosenFace = PfpManager().chosenBody.faceOptions[Random().nextInt(PfpManager().chosenBody.faceOptions.length)]
+          : null;
+      !PfpManager().lockedOptions['expression']!
+          ? PfpManager().chosenExpression = PfpManager().chosenFace.expressionOptions.keys.toList()[Random().nextInt(PfpManager().chosenFace.expressionOptions.length)]
+          : null;
+      !PfpManager().lockedOptions['hair']!
+          ? PfpManager().chosenHair = PfpManager().chosenBody.hairOptions[Random().nextInt(PfpManager().chosenBody.hairOptions.length)]
+          : null;
+      !PfpManager().lockedOptions['nose']!
+          ? PfpManager().chosenNose = PfpManager().chosenBody.noseOptions[Random().nextInt(PfpManager().chosenBody.noseOptions.length)]
+          : null;
+      !PfpManager().lockedOptions['outfit']!
+          ? PfpManager().chosenOutfit = PfpManager().chosenBody.outfitOptions[Random().nextInt(PfpManager().chosenBody.outfitOptions.length)]
+          : null;
+      !PfpManager().lockedOptions['colorBG']! ? PfpManager().colorBg = colorOptionsBackground.keys.toList()[Random().nextInt(colorOptionsBackground.length)] : null;
+      !PfpManager().lockedOptions['colorSkin']! ? PfpManager().colorSkin = colorOptionsSkin.keys.toList()[Random().nextInt(colorOptionsSkin.length)] : null;
+      !PfpManager().lockedOptions['colorEyes']! ? PfpManager().colorEyes = colorOptionsEyes.keys.toList()[Random().nextInt(colorOptionsEyes.length)] : null;
     });
   }
 
@@ -99,7 +109,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                             children: [
                               ElevatedButton(
                                   onPressed: _randomize,
-                                  child: Row(
+                                  child: const Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [Icon(Icons.casino), Text('Randomize')],
                                   )),
@@ -107,6 +117,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                 label: 'Body type',
                                 selectedOption: PfpManager().chosenBody,
                                 optionList: PfpManager().optionsBody,
+                                lockKey: 'body',
                                 onSelect: (option) {
                                   PfpManager().chosenBody = option as SpriteBody;
                                   PfpManager().chosenFace = PfpManager().chosenBody.faceOptions.first;
@@ -120,6 +131,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                 label: 'Face',
                                 selectedOption: PfpManager().chosenFace,
                                 optionList: PfpManager().chosenBody.faceOptions,
+                                lockKey: 'face',
                                 onSelect: (option) {
                                   PfpManager().chosenFace = option as SpriteFace;
                                   setState(() {});
@@ -133,6 +145,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                 label: 'Nose',
                                 selectedOption: PfpManager().chosenNose,
                                 optionList: PfpManager().chosenBody.noseOptions,
+                                lockKey: 'nose',
                                 onSelect: (option) {
                                   PfpManager().chosenNose = option as SpriteGeneric;
                                   setState(() {});
@@ -142,6 +155,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                 label: 'Hair style',
                                 selectedOption: PfpManager().chosenHair,
                                 optionList: PfpManager().chosenBody.hairOptions,
+                                lockKey: 'hair',
                                 onSelect: (option) {
                                   PfpManager().chosenHair = option as SpriteGeneric;
                                   setState(() {});
@@ -151,6 +165,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                 label: 'Outfit',
                                 selectedOption: PfpManager().chosenOutfit,
                                 optionList: PfpManager().chosenBody.outfitOptions,
+                                lockKey: 'outfit',
                                 onSelect: (option) {
                                   PfpManager().chosenOutfit = option as SpriteGeneric;
                                   setState(() {});
@@ -166,7 +181,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                             children: [
                               ElevatedButton(
                                   onPressed: _randomize,
-                                  child: Row(
+                                  child: const Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [Icon(Icons.casino), Text('Randomize')],
                                   )),
@@ -174,6 +189,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                 label: 'Background color',
                                 colorList: colorOptionsBackground,
                                 selectedColor: PfpManager().colorBg,
+                                lockKey: 'colorBG',
                                 onSelect: (option) {
                                   PfpManager().colorBg = option as String;
                                   setState(() {});
@@ -183,6 +199,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                 label: 'Skin color',
                                 colorList: colorOptionsSkin,
                                 selectedColor: PfpManager().colorSkin,
+                                lockKey: 'colorSkin',
                                 onSelect: (option) {
                                   PfpManager().colorSkin = option as String;
                                   setState(() {});
@@ -192,6 +209,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                 label: 'Eye color',
                                 colorList: colorOptionsEyes,
                                 selectedColor: PfpManager().colorEyes,
+                                lockKey: 'colorEyes',
                                 onSelect: (option) {
                                   PfpManager().colorEyes = option as String;
                                   setState(() {});

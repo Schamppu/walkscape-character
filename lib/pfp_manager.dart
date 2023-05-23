@@ -28,6 +28,18 @@ class PfpManager {
   late String colorSkin;
   late String colorEyes;
 
+  Map<String, bool> lockedOptions = {
+    'body': false,
+    'face': false,
+    'expression': false,
+    'nose': false,
+    'hair': false,
+    'outfit': false,
+    'colorBG': false,
+    'colorSkin': false,
+    'colorEyes': false,
+  };
+
   /// Loads all image paths from certain path
   Future<void> _loadAllFiles(String path) async {
     final manifestContent = await rootBundle.loadString('AssetManifest.json');

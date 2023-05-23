@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:walkscape_characters/change_between_views.dart';
@@ -11,6 +12,10 @@ import 'package:walkscape_characters/pfp_manager.dart';
 import 'package:walkscape_characters/vars.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 import 'package:universal_html/html.dart' as html;
+
+double getCardWidth() {
+  return 250.0;
+}
 
 class PageCharacterCreator extends StatefulWidget {
   const PageCharacterCreator({super.key, required this.title});
@@ -47,7 +52,6 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
   /// Randomizes all of the options
   void _randomize() {
     setState(() {
-      !PfpManager().lockedOptions['body']! ? PfpManager().chosenBody = PfpManager().optionsBody[Random().nextInt(PfpManager().optionsBody.length)] : null;
       !PfpManager().lockedOptions['face']!
           ? PfpManager().chosenFace = PfpManager().chosenBody.faceOptions[Random().nextInt(PfpManager().chosenBody.faceOptions.length)]
           : null;
@@ -75,7 +79,17 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Container(
+          margin: const EdgeInsets.all(4.0),
+          height: 30,
+          child: Center(
+            widthFactor: 1.0,
+            child: AutoSizeText(
+              widget.title,
+              maxLines: 2,
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 15.0),
@@ -86,163 +100,244 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
       body: Center(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0, bottom: 10),
-              child: Center(child: ChangeBetweenViewsButton(onChanged: () {
-                setState(() {
-                  if (chosenView == 0) {
-                    chosenView = 1;
-                  } else {
-                    chosenView = 0;
-                  }
-                });
-              })),
-            ),
             Expanded(
               child: Stack(
                 children: [
                   chosenView == 0
-                      ? SingleChildScrollView(
-                          padding: const EdgeInsets.symmetric(vertical: 170),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                  onPressed: _randomize,
-                                  child: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [Icon(Icons.casino), Text('Randomize')],
-                                  )),
-                              OptionPicker(
-                                label: 'Body type',
-                                selectedOption: PfpManager().chosenBody,
-                                optionList: PfpManager().optionsBody,
-                                lockKey: 'body',
-                                onSelect: (option) {
-                                  PfpManager().chosenBody = option as SpriteBody;
-                                  PfpManager().chosenFace = PfpManager().chosenBody.faceOptions.first;
-                                  PfpManager().chosenNose = PfpManager().chosenBody.noseOptions.first;
-                                  PfpManager().chosenHair = PfpManager().chosenBody.hairOptions.first;
-                                  PfpManager().chosenOutfit = PfpManager().chosenBody.outfitOptions.first;
-                                  setState(() {});
-                                },
-                              ),
-                              OptionPicker(
-                                label: 'Face',
-                                selectedOption: PfpManager().chosenFace,
-                                optionList: PfpManager().chosenBody.faceOptions,
-                                lockKey: 'face',
-                                onSelect: (option) {
-                                  PfpManager().chosenFace = option as SpriteFace;
-                                  setState(() {});
-                                },
-                                onExpressionSelect: (option) {
-                                  PfpManager().chosenExpression = option;
-                                  setState(() {});
-                                },
-                              ),
-                              OptionPicker(
-                                label: 'Nose',
-                                selectedOption: PfpManager().chosenNose,
-                                optionList: PfpManager().chosenBody.noseOptions,
-                                lockKey: 'nose',
-                                onSelect: (option) {
-                                  PfpManager().chosenNose = option as SpriteGeneric;
-                                  setState(() {});
-                                },
-                              ),
-                              OptionPicker(
-                                label: 'Hair style',
-                                selectedOption: PfpManager().chosenHair,
-                                optionList: PfpManager().chosenBody.hairOptions,
-                                lockKey: 'hair',
-                                onSelect: (option) {
-                                  PfpManager().chosenHair = option as SpriteGeneric;
-                                  setState(() {});
-                                },
-                              ),
-                              OptionPicker(
-                                label: 'Outfit',
-                                selectedOption: PfpManager().chosenOutfit,
-                                optionList: PfpManager().chosenBody.outfitOptions,
-                                lockKey: 'outfit',
-                                onSelect: (option) {
-                                  PfpManager().chosenOutfit = option as SpriteGeneric;
-                                  setState(() {});
-                                },
-                              ),
-                            ],
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: SingleChildScrollView(
+                            padding: ResponsiveBreakpoints.of(context).isDesktop ? null : const EdgeInsets.symmetric(vertical: 140),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                OptionPicker(
+                                  label: 'Body type',
+                                  selectedOption: PfpManager().chosenBody,
+                                  optionList: PfpManager().optionsBody,
+                                  lockKey: 'body',
+                                  onSelect: (option) {
+                                    PfpManager().chosenBody = option as SpriteBody;
+                                    PfpManager().chosenFace = PfpManager().chosenBody.faceOptions.first;
+                                    PfpManager().chosenNose = PfpManager().chosenBody.noseOptions.first;
+                                    PfpManager().chosenHair = PfpManager().chosenBody.hairOptions.first;
+                                    PfpManager().chosenOutfit = PfpManager().chosenBody.outfitOptions.first;
+                                    setState(() {});
+                                  },
+                                ),
+                                OptionPicker(
+                                  label: 'Face',
+                                  selectedOption: PfpManager().chosenFace,
+                                  optionList: PfpManager().chosenBody.faceOptions,
+                                  lockKey: 'face',
+                                  onSelect: (option) {
+                                    PfpManager().chosenFace = option as SpriteFace;
+                                    setState(() {});
+                                  },
+                                  onExpressionSelect: (option) {
+                                    PfpManager().chosenExpression = option;
+                                    setState(() {});
+                                  },
+                                ),
+                                OptionPicker(
+                                  label: 'Nose',
+                                  selectedOption: PfpManager().chosenNose,
+                                  optionList: PfpManager().chosenBody.noseOptions,
+                                  lockKey: 'nose',
+                                  onSelect: (option) {
+                                    PfpManager().chosenNose = option as SpriteGeneric;
+                                    setState(() {});
+                                  },
+                                ),
+                                OptionPicker(
+                                  label: 'Hair style',
+                                  selectedOption: PfpManager().chosenHair,
+                                  optionList: PfpManager().chosenBody.hairOptions,
+                                  lockKey: 'hair',
+                                  onSelect: (option) {
+                                    PfpManager().chosenHair = option as SpriteGeneric;
+                                    setState(() {});
+                                  },
+                                ),
+                                OptionPicker(
+                                  label: 'Outfit',
+                                  selectedOption: PfpManager().chosenOutfit,
+                                  optionList: PfpManager().chosenBody.outfitOptions,
+                                  lockKey: 'outfit',
+                                  onSelect: (option) {
+                                    PfpManager().chosenOutfit = option as SpriteGeneric;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         )
-                      : SingleChildScrollView(
-                          padding: const EdgeInsets.symmetric(vertical: 170),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                  onPressed: _randomize,
-                                  child: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [Icon(Icons.casino), Text('Randomize')],
-                                  )),
-                              OptionPicker(
-                                label: 'Background color',
-                                colorList: colorOptionsBackground,
-                                selectedColor: PfpManager().colorBg,
-                                lockKey: 'colorBG',
-                                onSelect: (option) {
-                                  PfpManager().colorBg = option as String;
-                                  setState(() {});
-                                },
-                              ),
-                              OptionPicker(
-                                label: 'Skin color',
-                                colorList: colorOptionsSkin,
-                                selectedColor: PfpManager().colorSkin,
-                                lockKey: 'colorSkin',
-                                onSelect: (option) {
-                                  PfpManager().colorSkin = option as String;
-                                  setState(() {});
-                                },
-                              ),
-                              OptionPicker(
-                                label: 'Eye color',
-                                colorList: colorOptionsEyes,
-                                selectedColor: PfpManager().colorEyes,
-                                lockKey: 'colorEyes',
-                                onSelect: (option) {
-                                  PfpManager().colorEyes = option as String;
-                                  setState(() {});
-                                },
-                              ),
-                            ],
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: SingleChildScrollView(
+                            padding: ResponsiveBreakpoints.of(context).isDesktop ? null : const EdgeInsets.symmetric(vertical: 140),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                OptionPicker(
+                                  label: 'Background color',
+                                  colorList: colorOptionsBackground,
+                                  selectedColor: PfpManager().colorBg,
+                                  lockKey: 'colorBG',
+                                  onSelect: (option) {
+                                    PfpManager().colorBg = option as String;
+                                    setState(() {});
+                                  },
+                                ),
+                                OptionPicker(
+                                  label: 'Skin color',
+                                  colorList: colorOptionsSkin,
+                                  selectedColor: PfpManager().colorSkin,
+                                  lockKey: 'colorSkin',
+                                  onSelect: (option) {
+                                    PfpManager().colorSkin = option as String;
+                                    setState(() {});
+                                  },
+                                ),
+                                OptionPicker(
+                                  label: 'Eye color',
+                                  colorList: colorOptionsEyes,
+                                  selectedColor: PfpManager().colorEyes,
+                                  lockKey: 'colorEyes',
+                                  onSelect: (option) {
+                                    PfpManager().colorEyes = option as String;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                  Row(
-                    mainAxisAlignment: ResponsiveBreakpoints.of(context).isDesktop ? MainAxisAlignment.start : MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: ResponsiveBreakpoints.of(context).isDesktop ? const EdgeInsets.only(left: 25) : const EdgeInsets.all(0),
-                        child: SizedBox(
-                          width: ResponsiveBreakpoints.of(context).isDesktop ? 256 : 128,
-                          height: ResponsiveBreakpoints.of(context).isDesktop ? 256 : 128,
-                          child: WidgetsToImage(
-                              controller: _controller,
-                              child: CharacterImage(
-                                width: ResponsiveBreakpoints.of(context).isDesktop ? 256 : 128,
-                                height: ResponsiveBreakpoints.of(context).isDesktop ? 256 : 128,
-                                selectedSprites: [
-                                  PfpManager().chosenBody,
-                                  PfpManager().chosenFace,
-                                  PfpManager().chosenNose,
-                                  PfpManager().chosenHair,
-                                  PfpManager().chosenOutfit,
-                                ],
-                              )),
-                        ),
-                      ),
-                    ],
-                  ),
+                  ResponsiveBreakpoints.of(context).isDesktop
+                      ? Card(
+                          margin: const EdgeInsets.only(left: 10, top: 10),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 256,
+                                  height: 256,
+                                  child: WidgetsToImage(
+                                      controller: _controller,
+                                      child: CharacterImage(
+                                        width: 256,
+                                        height: 256,
+                                        selectedSprites: [
+                                          PfpManager().chosenBody,
+                                          PfpManager().chosenFace,
+                                          PfpManager().chosenNose,
+                                          PfpManager().chosenHair,
+                                          PfpManager().chosenOutfit,
+                                        ],
+                                      )),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10.0, bottom: 10),
+                                  child: ChangeBetweenViewsButton(onChanged: () {
+                                    setState(() {
+                                      if (chosenView == 0) {
+                                        chosenView = 1;
+                                      } else {
+                                        chosenView = 0;
+                                      }
+                                    });
+                                  }),
+                                ),
+                                FilledButton(
+                                    onPressed: _randomize,
+                                    child: const Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.casino),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text('Randomize'),
+                                      ],
+                                    )),
+                              ],
+                            ),
+                          ),
+                        )
+                      : Card(
+                          margin: const EdgeInsets.only(left: 10, top: 10, right: 10),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                SizedBox(
+                                  width: 128,
+                                  height: 128,
+                                  child: WidgetsToImage(
+                                      controller: _controller,
+                                      child: CharacterImage(
+                                        width: 128,
+                                        height: 128,
+                                        selectedSprites: [
+                                          PfpManager().chosenBody,
+                                          PfpManager().chosenFace,
+                                          PfpManager().chosenNose,
+                                          PfpManager().chosenHair,
+                                          PfpManager().chosenOutfit,
+                                        ],
+                                      )),
+                                ),
+                                SizedBox(
+                                  height: 128,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8.0),
+                                        child: ChangeBetweenViewsButton(onChanged: () {
+                                          setState(() {
+                                            if (chosenView == 0) {
+                                              chosenView = 1;
+                                            } else {
+                                              chosenView = 0;
+                                            }
+                                          });
+                                        }),
+                                      ),
+                                      FilledButton(
+                                          onPressed: _randomize,
+                                          style: ElevatedButton.styleFrom(minimumSize: Size.zero, padding: EdgeInsets.zero),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.casino,
+                                                  size: 18,
+                                                ),
+                                                const SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  'Randomize',
+                                                  style: Theme.of(context).textTheme.bodyMedium,
+                                                )
+                                              ],
+                                            ),
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
                 ],
               ),
             ),

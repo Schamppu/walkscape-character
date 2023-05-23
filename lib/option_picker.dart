@@ -2,6 +2,7 @@ import 'dart:js_interop';
 
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:walkscape_characters/character_creator.dart';
 import 'package:walkscape_characters/option_interface.dart';
 import 'package:walkscape_characters/pfp_manager.dart';
 import 'package:walkscape_characters/vars.dart';
@@ -76,7 +77,7 @@ class _OptionPickerState extends State<OptionPicker> {
                                 ),
                                 Text(option.name),
                                 const Spacer(),
-                                ElevatedButton(
+                                FilledButton(
                                     onPressed: () {
                                       widget.onSelect(option);
                                       Navigator.pop(context);
@@ -100,7 +101,7 @@ class _OptionPickerState extends State<OptionPicker> {
                                 ),
                                 Text(colorEntry.key),
                                 const Spacer(),
-                                ElevatedButton(
+                                FilledButton(
                                     onPressed: () {
                                       widget.onSelect(colorEntry.key);
                                       Navigator.pop(context);
@@ -178,31 +179,33 @@ class _OptionPickerState extends State<OptionPicker> {
                 Center(
                     child: Stack(
                   children: [
-                    const SizedBox(
-                      width: 200,
+                    SizedBox(
+                      width: getCardWidth(),
                       height: 40,
                     ),
                     Positioned.fill(child: Center(child: Text(widget.label))),
-                    Positioned(
-                        right: 0,
-                        child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                PfpManager().lockedOptions[widget.lockKey] = !PfpManager().lockedOptions[widget.lockKey]!;
-                              });
-                            },
-                            icon: PfpManager().lockedOptions[widget.lockKey]!
-                                ? Icon(
-                                    Icons.lock,
-                                    color: Theme.of(context).primaryColor,
-                                  )
-                                : Icon(
-                                    Icons.lock_open,
-                                    color: Theme.of(context).primaryColor,
-                                  )))
+                    widget.selectedOption.runtimeType != SpriteBody
+                        ? Positioned(
+                            right: 0,
+                            child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    PfpManager().lockedOptions[widget.lockKey] = !PfpManager().lockedOptions[widget.lockKey]!;
+                                  });
+                                },
+                                icon: PfpManager().lockedOptions[widget.lockKey]!
+                                    ? Icon(
+                                        Icons.lock,
+                                        color: Theme.of(context).colorScheme.primary,
+                                      )
+                                    : Icon(
+                                        Icons.lock_open,
+                                        color: Theme.of(context).colorScheme.primary,
+                                      )))
+                        : const SizedBox.shrink()
                   ],
                 )),
-                ElevatedButton(
+                FilledButton(
                     onPressed: () => _openSelectionSheet(context), child: widget.colorList.isNull ? Text(widget.selectedOption!.name) : Text(widget.selectedColor!)),
                 const Divider(),
                 Row(
@@ -214,7 +217,7 @@ class _OptionPickerState extends State<OptionPicker> {
                         },
                         icon: Icon(
                           Icons.arrow_back_rounded,
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).colorScheme.primary,
                         )),
                     IconButton(
                         onPressed: () {
@@ -222,47 +225,47 @@ class _OptionPickerState extends State<OptionPicker> {
                         },
                         icon: Icon(
                           Icons.arrow_forward_rounded,
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).colorScheme.primary,
                         )),
                   ],
                 ),
+                // Showing the expression selection if picking a face
                 widget.selectedOption.runtimeType == SpriteFace
                     ? Column(
                         children: [
                           const Divider(),
                           Stack(
                             children: [
-                              const SizedBox(
-                                width: 200,
-                                height: 40,
+                              SizedBox(
+                                width: getCardWidth(),
+                                height: 60,
                               ),
                               Positioned.fill(
                                 child: Center(
-                                  child: DropdownButton<String>(
-                                    value: PfpManager().chosenExpression,
-                                    icon: const Icon(Icons.arrow_downward),
-                                    elevation: 16,
-                                    style: const TextStyle(color: Colors.deepPurple),
-                                    underline: Container(
-                                      height: 2,
-                                      color: Colors.deepPurpleAccent,
-                                    ),
-                                    onChanged: (String? value) {
+                                  child: DropdownMenu<String>(
+                                    enableSearch: false,
+                                    enableFilter: false,
+                                    initialSelection: PfpManager().chosenExpression,
+                                    width: 130,
+                                    label: Text('Expression'),
+                                    dropdownMenuEntries: (widget.selectedOption as SpriteFace).expressionOptions.keys.map<DropdownMenuEntry<String>>((String value) {
+                                      return DropdownMenuEntry<String>(
+                                        value: value,
+                                        label: value,
+                                      );
+                                    }).toList(),
+                                    onSelected: (value) {
                                       if (value != null && widget.onExpressionSelect != null) {
                                         widget.onExpressionSelect!(value);
                                       }
                                     },
-                                    items: (widget.selectedOption as SpriteFace).expressionOptions.keys.map<DropdownMenuItem<String>>((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
                                   ),
                                 ),
                               ),
                               Positioned(
                                   right: 0,
+                                  top: 0,
+                                  bottom: 0,
                                   child: IconButton(
                                       onPressed: () {
                                         setState(() {
@@ -272,11 +275,11 @@ class _OptionPickerState extends State<OptionPicker> {
                                       icon: PfpManager().lockedOptions['expression']!
                                           ? Icon(
                                               Icons.lock,
-                                              color: Theme.of(context).primaryColor,
+                                              color: Theme.of(context).colorScheme.primary,
                                             )
                                           : Icon(
                                               Icons.lock_open,
-                                              color: Theme.of(context).primaryColor,
+                                              color: Theme.of(context).colorScheme.primary,
                                             )))
                             ],
                           )

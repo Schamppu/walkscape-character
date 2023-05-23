@@ -17,15 +17,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'WalkScape Character Creator',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.light), useMaterial3: true, brightness: Brightness.light),
+      darkTheme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.dark), useMaterial3: true, brightness: Brightness.dark),
+      themeMode: ThemeMode.system,
       builder: (context, child) => ResponsiveBreakpoints.builder(child: child!, breakpoints: [
         const Breakpoint(start: 0, end: 450, name: MOBILE),
         const Breakpoint(start: 451, end: 950, name: TABLET),
-        const Breakpoint(start: 951, end: 1920, name: DESKTOP),
-        const Breakpoint(start: 1921, end: double.infinity, name: '4K')
+        const Breakpoint(start: 951, end: double.infinity, name: DESKTOP),
       ]),
       home: const PageCharacterCreator(title: 'WalkScape Character Creator'),
     );

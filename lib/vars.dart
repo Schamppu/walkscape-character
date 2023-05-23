@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
-const layerHairSupp = 0;
-const layerBody = 1;
-const layerOutfit = 2;
-const layerFace = 3;
-const layerNose = 4;
-const layerHair = 5;
+const layerBackAccessory = 0;
+const layerHairSupp = 1;
+const layerBody = 2;
+const layerOutfit = 3;
+const layerFace = 4;
+const layerNose = 5;
+const layerFaceAccessory = 6;
+const layerEyes = 7;
+const layerHair = 8;
 
 const colorOptionsSkin = {
   'very light': [

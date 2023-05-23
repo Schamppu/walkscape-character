@@ -18,12 +18,16 @@ class PfpManager {
   }
 
   final List<SpriteBody> optionsBody = [];
+  final List<SpriteGeneric> optionsBackAccessory = [];
   late SpriteBody chosenBody;
   late SpriteFace chosenFace;
   late String chosenExpression;
   late SpriteGeneric chosenNose;
   late SpriteGeneric chosenHair;
   late SpriteGeneric chosenOutfit;
+  late SpriteGeneric? chosenEye;
+  late SpriteGeneric? chosenFaceAccessory;
+  late SpriteGeneric? chosenBackAccessory;
   late String colorBg;
   late String colorSkin;
   late String colorEyes;
@@ -41,6 +45,12 @@ class PfpManager {
     'hairVariant': false,
     'outfit': false,
     'outfitVariant': false,
+    'faceAccessory': false,
+    'faceAccessoryVariant': false,
+    'eyes': false,
+    'eyesVariant': false,
+    'backAccessory': false,
+    'backAccessoryVariant': false,
     'colorBG': false,
     'colorSkin': false,
     'colorEyes': false,
@@ -67,6 +77,8 @@ class PfpManager {
     // Get folders containing bodies. Remove back_accessories from the list to only count for bodies.
     final bodyFolders = getSubFolders(rootFolder, imagePaths);
     bodyFolders.remove('back_accessories');
+    // Add back accessories to their corresponding data structure
+    addGeneric('${rootFolder}back_accessories/', optionsBackAccessory, layerBackAccessory, null, 'nose');
     for (var folder in bodyFolders) {
       final addedBody = SpriteBody(name: folder, spritePath: '$rootFolder$folder/bodies/body.png', layer: layerBody);
       optionsBody.add(addedBody);
@@ -78,6 +90,9 @@ class PfpManager {
     chosenNose = chosenBody.noseOptions.first;
     chosenHair = chosenBody.hairOptions.first;
     chosenOutfit = chosenBody.outfitOptions.first;
+    chosenBackAccessory = null;
+    chosenFaceAccessory = null;
+    chosenEye = null;
     // Default colors
     colorBg = colorOptionsBackground.keys.first;
     colorSkin = colorOptionsSkin.keys.first;
@@ -103,6 +118,8 @@ class SpriteBody implements OptionInterface {
   final List<SpriteGeneric> noseOptions = [];
   final List<SpriteGeneric> hairOptions = [];
   final List<SpriteGeneric> outfitOptions = [];
+  final List<SpriteGeneric> eyeOptions = [];
+  final List<SpriteGeneric> faceAccessoryOptions = [];
   String irisPath = '';
 
   void init(String folder) {
@@ -117,10 +134,14 @@ class SpriteBody implements OptionInterface {
     addGeneric('$rootFolder$folder/noses/', noseOptions, layerNose, null, 'nose');
     addGeneric('$rootFolder$folder/hairs/', hairOptions, layerNose, layerHairSupp, 'hair');
     addGeneric('$rootFolder$folder/outfit/', outfitOptions, layerOutfit, null, 'outfit');
+    addGeneric('$rootFolder$folder/eyes/', eyeOptions, layerEyes, null, 'eyes');
+    addGeneric('$rootFolder$folder/face_accessories/', faceAccessoryOptions, layerFaceAccessory, null, 'faceAccessory');
     faceOptions.sort(sortByNames);
     noseOptions.sort(sortByNames);
     hairOptions.sort(sortByNames);
     outfitOptions.sort(sortByNames);
+    eyeOptions.sort(sortByNames);
+    faceAccessoryOptions.sort(sortByNames);
     irisPath = '$rootFolder$folder/iris/iris.png';
   }
 
@@ -129,33 +150,6 @@ class SpriteBody implements OptionInterface {
       return 1;
     }
     return a.name.toLowerCase().compareTo(b.name.toLowerCase());
-  }
-
-  void addGeneric(String fileFolder, List<SpriteGeneric> list, int layer, int? supplementaryLayer, String type) {
-    final files = getFiles(fileFolder, imagePaths);
-    for (var option in files) {
-      var path = '$fileFolder$option';
-      var optionAdded = SpriteGeneric(name: option.replaceAll('.png', ''), spritePath: path, layer: layer, supplementaryLayer: supplementaryLayer, type: type);
-      // Get variants
-      if (optionAdded.name.contains('_var')) {
-        var index = list.indexWhere((sprite) => sprite.name.contains(option.split('_var')[0]));
-        if (index != -1) {
-          list[index].variants.addAll({'variant ${list[index].variants.length + 1}': path});
-          print(path);
-        }
-      } else {
-        // Get supplementary layers
-        if (optionAdded.name.contains('_supp')) {
-          var index = list.indexWhere((sprite) => sprite.name.contains(option.replaceAll('_supp.png', '')));
-          if (index != -1) {
-            list[index].supplementaryPath = path;
-          }
-        } else {
-          // Add the sprite itself if it's not a variant or supplementary
-          list.add(optionAdded);
-        }
-      }
-    }
   }
 }
 
@@ -201,6 +195,33 @@ class SpriteGeneric implements OptionInterface {
   final int? supplementaryLayer;
 
   final String type;
+}
+
+/// Adds a SpriteGeneric sprite layer
+void addGeneric(String fileFolder, List<SpriteGeneric> list, int layer, int? supplementaryLayer, String type) {
+  final files = getFiles(fileFolder, imagePaths);
+  for (var option in files) {
+    var path = '$fileFolder$option';
+    var optionAdded = SpriteGeneric(name: option.replaceAll('.png', ''), spritePath: path, layer: layer, supplementaryLayer: supplementaryLayer, type: type);
+    // Get variants
+    if (optionAdded.name.contains('_var')) {
+      var index = list.indexWhere((sprite) => sprite.name.contains(option.split('_var')[0]));
+      if (index != -1) {
+        list[index].variants.addAll({'variant ${list[index].variants.length + 1}': path});
+      }
+    } else {
+      // Get supplementary layers
+      if (optionAdded.name.contains('_supp')) {
+        var index = list.indexWhere((sprite) => sprite.name.contains(option.replaceAll('_supp.png', '')));
+        if (index != -1) {
+          list[index].supplementaryPath = path;
+        }
+      } else {
+        // Add the sprite itself if it's not a variant or supplementary
+        list.add(optionAdded);
+      }
+    }
+  }
 }
 
 /// Returns all subfolders from a certain path

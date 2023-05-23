@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:walkscape_characters/change_between_views.dart';
 import 'package:walkscape_characters/character_image.dart';
+import 'package:walkscape_characters/option_interface.dart';
 import 'package:walkscape_characters/option_picker.dart';
 import 'package:walkscape_characters/pfp_manager.dart';
 import 'package:walkscape_characters/vars.dart';
@@ -49,6 +50,20 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
     }
   }
 
+  List<OptionInterface> _getSelectedSprites() {
+    final returnList = [
+      PfpManager().chosenBody,
+      PfpManager().chosenFace,
+      PfpManager().chosenNose,
+      PfpManager().chosenHair,
+      PfpManager().chosenOutfit,
+    ];
+    PfpManager().chosenBackAccessory != null ? returnList.add(PfpManager().chosenBackAccessory!) : null;
+    PfpManager().chosenFaceAccessory != null ? returnList.add(PfpManager().chosenFaceAccessory!) : null;
+    PfpManager().chosenEye != null ? returnList.add(PfpManager().chosenEye!) : null;
+    return returnList;
+  }
+
   /// Randomizes all of the options
   void _randomize() {
     setState(() {
@@ -78,6 +93,40 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
           ? PfpManager().chosenOutfit = PfpManager().chosenBody.outfitOptions[Random().nextInt(PfpManager().chosenBody.outfitOptions.length)]
           : null;
       _randomizeVariant(PfpManager().chosenOutfit, previousOutfit, 'outfitVariant');
+
+      // Back accessory randomisation
+      var previousBackAccessory = PfpManager().chosenBackAccessory;
+      if (!PfpManager().lockedOptions['backAccessory']!) {
+        if (Random().nextInt(5) == 0) {
+          PfpManager().chosenBackAccessory = PfpManager().optionsBackAccessory[Random().nextInt(PfpManager().optionsBackAccessory.length)];
+        } else {
+          PfpManager().chosenBackAccessory = null;
+        }
+      }
+      _randomizeVariant(PfpManager().chosenBackAccessory, previousBackAccessory, 'backAccessoryVariant');
+
+      // Face accessory randomisation
+      var previousFaceAccessory = PfpManager().chosenFaceAccessory;
+      if (!PfpManager().lockedOptions['faceAccessory']!) {
+        if (Random().nextInt(5) == 0) {
+          PfpManager().chosenFaceAccessory = PfpManager().chosenBody.faceAccessoryOptions[Random().nextInt(PfpManager().chosenBody.faceAccessoryOptions.length)];
+        } else {
+          PfpManager().chosenFaceAccessory = null;
+        }
+      }
+      _randomizeVariant(PfpManager().chosenFaceAccessory, previousFaceAccessory, 'faceAccessoryVariant');
+
+      // Eye / eye accessory randomisation
+      var previousEye = PfpManager().chosenEye;
+      if (!PfpManager().lockedOptions['eyes']!) {
+        if (Random().nextInt(5) == 0) {
+          PfpManager().chosenEye = PfpManager().chosenBody.eyeOptions[Random().nextInt(PfpManager().chosenBody.eyeOptions.length)];
+        } else {
+          PfpManager().chosenEye = null;
+        }
+      }
+      _randomizeVariant(PfpManager().chosenFaceAccessory, previousEye, 'eyesVariant');
+
       !PfpManager().lockedOptions['colorBG']! ? PfpManager().colorBg = colorOptionsBackground.keys.toList()[Random().nextInt(colorOptionsBackground.length)] : null;
       !PfpManager().lockedOptions['colorSkin']! ? PfpManager().colorSkin = colorOptionsSkin.keys.toList()[Random().nextInt(colorOptionsSkin.length)] : null;
       !PfpManager().lockedOptions['colorEyes']! ? PfpManager().colorEyes = colorOptionsEyes.keys.toList()[Random().nextInt(colorOptionsEyes.length)] : null;
@@ -91,12 +140,17 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
     });
   }
 
-  void _randomizeVariant(SpriteGeneric sprite, SpriteGeneric previousSprite, String variantLockKey) {
-    previousSprite.chosenVariant = null;
-    if (sprite.variants.isNotEmpty && !PfpManager().lockedOptions[variantLockKey]!) {
-      sprite.chosenVariant = sprite.variants.keys.toList()[Random().nextInt(sprite.variants.length)];
-      if (Random().nextInt(sprite.variants.length + 1) == 0) {
-        sprite.chosenVariant = null;
+  void _randomizeVariant(SpriteGeneric? sprite, SpriteGeneric? previousSprite, String variantLockKey) {
+    if (previousSprite != null) {
+      previousSprite.chosenVariant = null;
+    }
+
+    if (sprite != null) {
+      if (sprite.variants.isNotEmpty && !PfpManager().lockedOptions[variantLockKey]!) {
+        sprite.chosenVariant = sprite.variants.keys.toList()[Random().nextInt(sprite.variants.length)];
+        if (Random().nextInt(sprite.variants.length + 1) == 0) {
+          sprite.chosenVariant = null;
+        }
       }
     }
   }
@@ -150,8 +204,11 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     PfpManager().chosenNose = PfpManager().chosenBody.noseOptions.first;
                                     PfpManager().chosenHair = PfpManager().chosenBody.hairOptions.first;
                                     PfpManager().chosenOutfit = PfpManager().chosenBody.outfitOptions.first;
+                                    PfpManager().chosenFaceAccessory = null;
+                                    PfpManager().chosenEye = null;
                                     setState(() {});
                                   },
+                                  canBeNull: false,
                                 ),
                                 OptionPicker(
                                   label: 'Face',
@@ -166,6 +223,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     PfpManager().chosenExpression = option;
                                     setState(() {});
                                   },
+                                  canBeNull: false,
                                 ),
                                 OptionPicker(
                                   label: 'Nose',
@@ -178,6 +236,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     setState(() {});
                                   },
                                   variantLockKey: 'noseVariant',
+                                  canBeNull: false,
                                 ),
                                 OptionPicker(
                                   label: 'Hair style',
@@ -190,6 +249,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     setState(() {});
                                   },
                                   variantLockKey: 'hairVariant',
+                                  canBeNull: false,
                                 ),
                                 OptionPicker(
                                   label: 'Outfit',
@@ -210,6 +270,70 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     }
                                     setState(() {});
                                   },
+                                  canBeNull: false,
+                                ),
+                                OptionPicker(
+                                  label: 'Back accessory',
+                                  selectedOption: PfpManager().chosenBackAccessory,
+                                  optionList: PfpManager().optionsBackAccessory,
+                                  lockKey: 'backAccessory',
+                                  onSelect: (option) {
+                                    if (PfpManager().chosenBackAccessory != null) {
+                                      PfpManager().chosenBackAccessory!.chosenVariant = null;
+                                    }
+                                    if (option != null) {
+                                      if (option != 'none') {
+                                        PfpManager().chosenBackAccessory = option as SpriteGeneric;
+                                      } else {
+                                        PfpManager().chosenBackAccessory = null;
+                                      }
+                                    }
+                                    setState(() {});
+                                  },
+                                  variantLockKey: 'backAccessoryVariant',
+                                  canBeNull: true,
+                                ),
+                                OptionPicker(
+                                  label: 'Face accessory',
+                                  selectedOption: PfpManager().chosenFaceAccessory,
+                                  optionList: PfpManager().chosenBody.faceAccessoryOptions,
+                                  lockKey: 'faceAccessory',
+                                  onSelect: (option) {
+                                    if (PfpManager().chosenFaceAccessory != null) {
+                                      PfpManager().chosenFaceAccessory!.chosenVariant = null;
+                                    }
+                                    if (option != null) {
+                                      if (option != 'none') {
+                                        PfpManager().chosenFaceAccessory = option as SpriteGeneric;
+                                      } else {
+                                        PfpManager().chosenFaceAccessory = null;
+                                      }
+                                    }
+                                    setState(() {});
+                                  },
+                                  variantLockKey: 'faceAccessoryVariant',
+                                  canBeNull: true,
+                                ),
+                                OptionPicker(
+                                  label: 'Eyes / Eye accessory',
+                                  selectedOption: PfpManager().chosenEye,
+                                  optionList: PfpManager().chosenBody.eyeOptions,
+                                  lockKey: 'eyes',
+                                  onSelect: (option) {
+                                    if (PfpManager().chosenEye != null) {
+                                      PfpManager().chosenEye!.chosenVariant = null;
+                                    }
+                                    if (option != null) {
+                                      if (option != 'none') {
+                                        PfpManager().chosenEye = option as SpriteGeneric;
+                                      } else {
+                                        PfpManager().chosenEye = null;
+                                      }
+                                    }
+                                    setState(() {});
+                                  },
+                                  variantLockKey: 'eyesVariant',
+                                  canBeNull: true,
                                 ),
                               ],
                             ),
@@ -231,6 +355,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     PfpManager().colorBg = option as String;
                                     setState(() {});
                                   },
+                                  canBeNull: false,
                                 ),
                                 OptionPicker(
                                   label: 'Skin color',
@@ -241,6 +366,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     PfpManager().colorSkin = option as String;
                                     setState(() {});
                                   },
+                                  canBeNull: false,
                                 ),
                                 OptionPicker(
                                   label: 'Eye color',
@@ -251,6 +377,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     PfpManager().colorEyes = option as String;
                                     setState(() {});
                                   },
+                                  canBeNull: false,
                                 ),
                                 OptionPicker(
                                   label: 'Hair color',
@@ -261,6 +388,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     PfpManager().colorHair = option as String;
                                     setState(() {});
                                   },
+                                  canBeNull: false,
                                 ),
                                 OptionPicker(
                                   label: 'Eyebrown color',
@@ -271,6 +399,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     PfpManager().colorEyeBrown = option as String;
                                     setState(() {});
                                   },
+                                  canBeNull: false,
                                 ),
                                 OptionPicker(
                                   label: 'Facial hair color',
@@ -281,6 +410,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     PfpManager().colorFacialHair = option as String;
                                     setState(() {});
                                   },
+                                  canBeNull: false,
                                 ),
                               ],
                             ),
@@ -302,13 +432,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                       child: CharacterImage(
                                         width: 256,
                                         height: 256,
-                                        selectedSprites: [
-                                          PfpManager().chosenBody,
-                                          PfpManager().chosenFace,
-                                          PfpManager().chosenNose,
-                                          PfpManager().chosenHair,
-                                          PfpManager().chosenOutfit,
-                                        ],
+                                        selectedSprites: _getSelectedSprites(),
                                       )),
                                 ),
                                 Padding(
@@ -354,13 +478,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                       child: CharacterImage(
                                         width: 128,
                                         height: 128,
-                                        selectedSprites: [
-                                          PfpManager().chosenBody,
-                                          PfpManager().chosenFace,
-                                          PfpManager().chosenNose,
-                                          PfpManager().chosenHair,
-                                          PfpManager().chosenOutfit,
-                                        ],
+                                        selectedSprites: _getSelectedSprites(),
                                       )),
                                 ),
                                 SizedBox(

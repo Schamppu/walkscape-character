@@ -1,6 +1,4 @@
 import 'dart:js_interop';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:walkscape_characters/character_creator.dart';
@@ -20,7 +18,8 @@ class OptionPicker extends StatefulWidget {
       this.colorList,
       this.selectedColor,
       required this.lockKey,
-      this.variantLockKey});
+      this.variantLockKey,
+      required this.canBeNull});
   final String label;
   final OptionInterface? selectedOption;
   final List<OptionInterface>? optionList;
@@ -31,6 +30,7 @@ class OptionPicker extends StatefulWidget {
   final String? selectedColor;
   final String lockKey;
   final String? variantLockKey;
+  final bool canBeNull;
 
   @override
   State<OptionPicker> createState() => _OptionPickerState();
@@ -221,11 +221,18 @@ class _OptionPickerState extends State<OptionPicker> {
   dynamic _getPrevious() {
     dynamic returnValue;
     if (widget.colorList.isNull) {
-      var index = widget.optionList!.indexOf(widget.selectedOption!);
-      if (index == 0) {
-        index = widget.optionList!.length - 1;
-      } else {
-        index--;
+      var index = 0;
+      if (widget.canBeNull) {
+        if (widget.selectedOption == null) {
+          index = widget.optionList!.length;
+        } else {
+          index = widget.optionList!.indexOf(widget.selectedOption!);
+        }
+        if (index <= 0) {
+          return 'none';
+        } else {
+          index--;
+        }
       }
       returnValue = widget.optionList![index];
     } else {
@@ -244,11 +251,25 @@ class _OptionPickerState extends State<OptionPicker> {
   dynamic _getNext() {
     dynamic returnValue;
     if (widget.colorList.isNull) {
-      var index = widget.optionList!.indexOf(widget.selectedOption!);
-      if (index >= widget.optionList!.length - 1) {
-        index = 0;
+      var index = 0;
+      if (widget.canBeNull) {
+        if (widget.selectedOption == null) {
+          index = -1;
+        } else {
+          index = widget.optionList!.indexOf(widget.selectedOption!);
+        }
+        if (index >= widget.optionList!.length - 1) {
+          return 'none';
+        } else {
+          index++;
+        }
       } else {
-        index++;
+        index = widget.optionList!.indexOf(widget.selectedOption!);
+        if (index >= widget.optionList!.length - 1) {
+          index = 0;
+        } else {
+          index++;
+        }
       }
       returnValue = widget.optionList![index];
     } else {
@@ -328,7 +349,6 @@ class _OptionPickerState extends State<OptionPicker> {
   }
 
   List<DropdownMenuEntry<String>> _getVariantList(SpriteGeneric sprite) {
-    print('getting variants ${sprite.name}: ${sprite.variants['variant 1']}');
     var list = sprite.variants.keys.map<DropdownMenuEntry<String>>((String value) {
       return DropdownMenuEntry<String>(
         value: value,
@@ -385,6 +405,7 @@ class _OptionPickerState extends State<OptionPicker> {
                   ],
                 )),
                 const Divider(),
+                // The Main Option and selection buttons for it
                 SizedBox(
                   width: getCardWidth(),
                   child: Row(
@@ -398,9 +419,13 @@ class _OptionPickerState extends State<OptionPicker> {
                             Icons.arrow_back_rounded,
                             color: Theme.of(context).colorScheme.primary,
                           )),
-                      FilledButton(
-                          onPressed: () => _openSelectionSheet(context),
-                          child: widget.colorList.isNull ? Text(widget.selectedOption!.name) : Text(widget.selectedColor!)),
+                      !widget.canBeNull
+                          ? FilledButton(
+                              onPressed: () => _openSelectionSheet(context),
+                              child: widget.colorList.isNull ? Text(widget.selectedOption!.name) : Text(widget.selectedColor!))
+                          : FilledButton(
+                              onPressed: () => _openSelectionSheet(context),
+                              child: widget.selectedOption == null ? const Text('none') : Text(widget.selectedOption!.name)),
                       IconButton(
                           onPressed: () {
                             widget.onSelect(_getNext());

@@ -247,7 +247,10 @@ class _OptionPickerState extends State<OptionPicker> {
                                     enableFilter: false,
                                     initialSelection: PfpManager().chosenExpression,
                                     width: 130,
-                                    label: Text('Expression'),
+                                    label: Text(
+                                      'Expression',
+                                      style: Theme.of(context).textTheme.labelLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
+                                    ),
                                     dropdownMenuEntries: (widget.selectedOption as SpriteFace).expressionOptions.keys.map<DropdownMenuEntry<String>>((String value) {
                                       return DropdownMenuEntry<String>(
                                         value: value,

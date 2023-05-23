@@ -1,4 +1,5 @@
 import 'dart:js_interop';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -18,7 +19,8 @@ class OptionPicker extends StatefulWidget {
       this.onVariantSelect,
       this.colorList,
       this.selectedColor,
-      required this.lockKey});
+      required this.lockKey,
+      this.variantLockKey});
   final String label;
   final OptionInterface? selectedOption;
   final List<OptionInterface>? optionList;
@@ -28,6 +30,7 @@ class OptionPicker extends StatefulWidget {
   final Map<String, List<Color>>? colorList;
   final String? selectedColor;
   final String lockKey;
+  final String? variantLockKey;
 
   @override
   State<OptionPicker> createState() => _OptionPickerState();
@@ -121,6 +124,99 @@ class _OptionPickerState extends State<OptionPicker> {
     );
   }
 
+  /// Shows bottom modal sheet for different variants
+  void _openVariantSelectionSheet(BuildContext context, SpriteGeneric sprite) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height / 6, maxWidth: 800),
+      builder: (context) {
+        return Container(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(vertical: 25),
+                child: Column(
+                  children: [
+                    for (var variantEntry in sprite.variants.entries)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Container(
+                                decoration: BoxDecoration(color: colorOptionsBackground[PfpManager().colorBg]![0]),
+                                child: ResponsiveBreakpoints.of(context).isDesktop
+                                    ? Image.asset(
+                                        variantEntry.value,
+                                        width: 128,
+                                        height: 128,
+                                        scale: 0.01,
+                                        filterQuality: FilterQuality.none,
+                                      )
+                                    : Image.asset(
+                                        variantEntry.value,
+                                        width: 64,
+                                        height: 64,
+                                        scale: 0.01,
+                                        filterQuality: FilterQuality.none,
+                                      )),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Text(variantEntry.key),
+                            const Spacer(),
+                            FilledButton(
+                                onPressed: () {
+                                  widget.onVariantSelect!(variantEntry.key);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Select')),
+                          ],
+                        ),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Container(
+                              decoration: BoxDecoration(color: colorOptionsBackground[PfpManager().colorBg]![0]),
+                              child: ResponsiveBreakpoints.of(context).isDesktop
+                                  ? Image.asset(
+                                      sprite.spritePath,
+                                      width: 128,
+                                      height: 128,
+                                      scale: 0.01,
+                                      filterQuality: FilterQuality.none,
+                                    )
+                                  : Image.asset(
+                                      sprite.spritePath,
+                                      width: 64,
+                                      height: 64,
+                                      scale: 0.01,
+                                      filterQuality: FilterQuality.none,
+                                    )),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          const Text('none'),
+                          const Spacer(),
+                          FilledButton(
+                              onPressed: () {
+                                widget.onVariantSelect!('none');
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Select')),
+                        ],
+                      ),
+                    )
+                  ],
+                )),
+          ),
+        );
+      },
+    );
+  }
+
   /// Returns the previous option in list
   dynamic _getPrevious() {
     dynamic returnValue;
@@ -167,17 +263,83 @@ class _OptionPickerState extends State<OptionPicker> {
     return returnValue;
   }
 
-  List<DropdownMenuEntry<String>> _getVariantList() {
-    var list = (widget.selectedOption as SpriteGeneric).variants.keys.map<DropdownMenuEntry<String>>((String value) {
+  Widget createVariantMenu(BuildContext context) {
+    var sprite = (widget.selectedOption! as SpriteGeneric);
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+      child: Column(
+        children: [
+          Text(
+            'Variant',
+            style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
+          ),
+          OutlinedButton(onPressed: () => _openVariantSelectionSheet(context, sprite), child: Text(sprite.chosenVariant ?? 'none')),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: IconButton(
+                    onPressed: () {
+                      var index = sprite.variants.entries.toList().indexWhere((entry) => entry.key == sprite.chosenVariant);
+                      if (index != -1) {
+                        if (index > 0) {
+                          widget.onVariantSelect!(sprite.variants.keys.toList()[index - 1]);
+                        } else {
+                          widget.onVariantSelect!('none');
+                        }
+                      } else {
+                        widget.onVariantSelect!(sprite.variants.keys.last);
+                      }
+                    },
+                    icon: Icon(
+                      Icons.arrow_back_rounded,
+                      color: Theme.of(context).colorScheme.primary,
+                    )),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: IconButton(
+                    onPressed: () {
+                      var index = sprite.variants.entries.toList().indexWhere((entry) => entry.key == sprite.chosenVariant);
+                      if (index != -1) {
+                        if (index < sprite.variants.length - 1) {
+                          widget.onVariantSelect!(sprite.variants.keys.toList()[index + 1]);
+                        } else {
+                          widget.onVariantSelect!('none');
+                        }
+                      } else {
+                        widget.onVariantSelect!(sprite.variants.keys.first);
+                      }
+                    },
+                    icon: Icon(
+                      Icons.arrow_forward_rounded,
+                      color: Theme.of(context).colorScheme.primary,
+                    )),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<DropdownMenuEntry<String>> _getVariantList(SpriteGeneric sprite) {
+    print('getting variants ${sprite.name}: ${sprite.variants['variant 1']}');
+    var list = sprite.variants.keys.map<DropdownMenuEntry<String>>((String value) {
       return DropdownMenuEntry<String>(
         value: value,
         label: value,
-        trailingIcon: Image.asset((widget.selectedOption as SpriteGeneric).variants[value]!),
+        trailingIcon: Image.asset(sprite.variants[value]!),
       );
     }).toList();
     list.add(DropdownMenuEntry<String>(
       value: 'none',
       label: 'none',
+      trailingIcon: Image.asset(sprite.spritePath),
     ));
     return list;
   }
@@ -222,29 +384,33 @@ class _OptionPickerState extends State<OptionPicker> {
                         : const SizedBox.shrink()
                   ],
                 )),
-                FilledButton(
-                    onPressed: () => _openSelectionSheet(context), child: widget.colorList.isNull ? Text(widget.selectedOption!.name) : Text(widget.selectedColor!)),
                 const Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          widget.onSelect(_getPrevious());
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_rounded,
-                          color: Theme.of(context).colorScheme.primary,
-                        )),
-                    IconButton(
-                        onPressed: () {
-                          widget.onSelect(_getNext());
-                        },
-                        icon: Icon(
-                          Icons.arrow_forward_rounded,
-                          color: Theme.of(context).colorScheme.primary,
-                        )),
-                  ],
+                SizedBox(
+                  width: getCardWidth(),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            widget.onSelect(_getPrevious());
+                          },
+                          icon: Icon(
+                            Icons.arrow_back_rounded,
+                            color: Theme.of(context).colorScheme.primary,
+                          )),
+                      FilledButton(
+                          onPressed: () => _openSelectionSheet(context),
+                          child: widget.colorList.isNull ? Text(widget.selectedOption!.name) : Text(widget.selectedColor!)),
+                      IconButton(
+                          onPressed: () {
+                            widget.onSelect(_getNext());
+                          },
+                          icon: Icon(
+                            Icons.arrow_forward_rounded,
+                            color: Theme.of(context).colorScheme.primary,
+                          )),
+                    ],
+                  ),
                 ),
                 // Showing the expression selection if picking a face
                 widget.selectedOption.runtimeType == SpriteFace
@@ -318,47 +484,32 @@ class _OptionPickerState extends State<OptionPicker> {
                                     children: [
                                       SizedBox(
                                         width: getCardWidth(),
-                                        height: 60,
+                                        height: 100,
                                       ),
                                       Positioned.fill(
-                                        child: Center(
-                                          child: DropdownMenu<String>(
-                                            enableSearch: false,
-                                            enableFilter: false,
-                                            initialSelection: (widget.selectedOption! as SpriteGeneric).chosenVariant ?? 'none',
-                                            width: 130,
-                                            label: Text(
-                                              'Variant',
-                                              style: Theme.of(context).textTheme.labelLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
-                                            ),
-                                            dropdownMenuEntries: _getVariantList(),
-                                            onSelected: (value) {
-                                              if (value != null && widget.onVariantSelect != null) {
-                                                widget.onVariantSelect!(value);
-                                              }
-                                            },
-                                          ),
-                                        ),
+                                        child: Center(child: createVariantMenu(context)),
                                       ),
-                                      Positioned(
-                                          right: 0,
-                                          top: 0,
-                                          bottom: 0,
-                                          child: IconButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  PfpManager().lockedOptions['expression'] = !PfpManager().lockedOptions['expression']!;
-                                                });
-                                              },
-                                              icon: PfpManager().lockedOptions['expression']!
-                                                  ? Icon(
-                                                      Icons.lock,
-                                                      color: Theme.of(context).colorScheme.primary,
-                                                    )
-                                                  : Icon(
-                                                      Icons.lock_open,
-                                                      color: Theme.of(context).colorScheme.primary,
-                                                    )))
+                                      widget.variantLockKey != null
+                                          ? Positioned(
+                                              right: 0,
+                                              top: 0,
+                                              bottom: 0,
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      PfpManager().lockedOptions[widget.variantLockKey!] = !PfpManager().lockedOptions[widget.variantLockKey!]!;
+                                                    });
+                                                  },
+                                                  icon: PfpManager().lockedOptions[widget.variantLockKey!]!
+                                                      ? Icon(
+                                                          Icons.lock,
+                                                          color: Theme.of(context).colorScheme.primary,
+                                                        )
+                                                      : Icon(
+                                                          Icons.lock_open,
+                                                          color: Theme.of(context).colorScheme.primary,
+                                                        )))
+                                          : const SizedBox.shrink()
                                     ],
                                   )
                                 ],

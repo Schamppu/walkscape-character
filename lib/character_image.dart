@@ -6,11 +6,10 @@ import 'package:walkscape_characters/pfp_manager.dart';
 import 'package:walkscape_characters/vars.dart';
 
 class CharacterImage extends StatelessWidget {
-  CharacterImage({super.key, required this.width, required this.height, required this.selectedSprites});
+  const CharacterImage({super.key, required this.width, required this.height, required this.selectedSprites});
   final double width;
   final double height;
   final List<OptionInterface> selectedSprites;
-  bool loading = true;
 
   List<Color> getDefaultColor(OptionInterface sprite) {
     if (sprite.runtimeType == SpriteBody || sprite.runtimeType == SpriteFace) {

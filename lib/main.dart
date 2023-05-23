@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:walkscape_characters/character_creator.dart';
 import 'package:walkscape_characters/page_intro.dart';
 import 'package:walkscape_characters/pfp_manager.dart';
 import 'package:responsive_framework/responsive_framework.dart';

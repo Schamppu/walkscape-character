@@ -36,8 +36,11 @@ class PfpManager {
     'face': false,
     'expression': false,
     'nose': false,
+    'noseVariant': false,
     'hair': false,
+    'hairVariant': false,
     'outfit': false,
+    'outfitVariant': false,
     'colorBG': false,
     'colorSkin': false,
     'colorEyes': false,
@@ -131,20 +134,24 @@ class SpriteBody implements OptionInterface {
   void addGeneric(String fileFolder, List<SpriteGeneric> list, int layer, int? supplementaryLayer, String type) {
     final files = getFiles(fileFolder, imagePaths);
     for (var option in files) {
-      var path = '$fileFolder/$option';
+      var path = '$fileFolder$option';
       var optionAdded = SpriteGeneric(name: option.replaceAll('.png', ''), spritePath: path, layer: layer, supplementaryLayer: supplementaryLayer, type: type);
+      // Get variants
       if (optionAdded.name.contains('_var')) {
         var index = list.indexWhere((sprite) => sprite.name.contains(option.split('_var')[0]));
         if (index != -1) {
           list[index].variants.addAll({'variant ${list[index].variants.length + 1}': path});
+          print(path);
         }
       } else {
+        // Get supplementary layers
         if (optionAdded.name.contains('_supp')) {
           var index = list.indexWhere((sprite) => sprite.name.contains(option.replaceAll('_supp.png', '')));
           if (index != -1) {
             list[index].supplementaryPath = path;
           }
         } else {
+          // Add the sprite itself if it's not a variant or supplementary
           list.add(optionAdded);
         }
       }

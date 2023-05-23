@@ -283,7 +283,6 @@ const colorOptionsHair = {
     Color.fromARGB(255, 180, 180, 180),
   ],
   'light gray': [
-    Color.fromARGB(255, 93, 93, 93),
     Color.fromARGB(255, 133, 133, 133),
     Color.fromARGB(255, 180, 180, 180),
     Color.fromARGB(255, 218, 224, 234),

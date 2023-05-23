@@ -63,21 +63,21 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
       !PfpManager().lockedOptions['hair']!
           ? PfpManager().chosenHair = PfpManager().chosenBody.hairOptions[Random().nextInt(PfpManager().chosenBody.hairOptions.length)]
           : null;
-      _randomizeVariant(PfpManager().chosenHair, previousHair);
+      _randomizeVariant(PfpManager().chosenHair, previousHair, 'hairVariant');
 
       // Nose randomisation
       var previousNose = PfpManager().chosenOutfit;
       !PfpManager().lockedOptions['nose']!
           ? PfpManager().chosenNose = PfpManager().chosenBody.noseOptions[Random().nextInt(PfpManager().chosenBody.noseOptions.length)]
           : null;
-      _randomizeVariant(PfpManager().chosenNose, previousNose);
+      _randomizeVariant(PfpManager().chosenNose, previousNose, 'noseVariant');
 
       // Outfit randomisation
       var previousOutfit = PfpManager().chosenOutfit;
       !PfpManager().lockedOptions['outfit']!
           ? PfpManager().chosenOutfit = PfpManager().chosenBody.outfitOptions[Random().nextInt(PfpManager().chosenBody.outfitOptions.length)]
           : null;
-      _randomizeVariant(PfpManager().chosenOutfit, previousOutfit);
+      _randomizeVariant(PfpManager().chosenOutfit, previousOutfit, 'outfitVariant');
       !PfpManager().lockedOptions['colorBG']! ? PfpManager().colorBg = colorOptionsBackground.keys.toList()[Random().nextInt(colorOptionsBackground.length)] : null;
       !PfpManager().lockedOptions['colorSkin']! ? PfpManager().colorSkin = colorOptionsSkin.keys.toList()[Random().nextInt(colorOptionsSkin.length)] : null;
       !PfpManager().lockedOptions['colorEyes']! ? PfpManager().colorEyes = colorOptionsEyes.keys.toList()[Random().nextInt(colorOptionsEyes.length)] : null;
@@ -91,10 +91,13 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
     });
   }
 
-  void _randomizeVariant(SpriteGeneric sprite, SpriteGeneric previousSprite) {
+  void _randomizeVariant(SpriteGeneric sprite, SpriteGeneric previousSprite, String variantLockKey) {
     previousSprite.chosenVariant = null;
-    if (sprite.variants.isNotEmpty) {
+    if (sprite.variants.isNotEmpty && !PfpManager().lockedOptions[variantLockKey]!) {
       sprite.chosenVariant = sprite.variants.keys.toList()[Random().nextInt(sprite.variants.length)];
+      if (Random().nextInt(sprite.variants.length + 1) == 0) {
+        sprite.chosenVariant = null;
+      }
     }
   }
 
@@ -174,6 +177,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     PfpManager().chosenNose = option as SpriteGeneric;
                                     setState(() {});
                                   },
+                                  variantLockKey: 'noseVariant',
                                 ),
                                 OptionPicker(
                                   label: 'Hair style',
@@ -185,6 +189,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     PfpManager().chosenHair = option as SpriteGeneric;
                                     setState(() {});
                                   },
+                                  variantLockKey: 'hairVariant',
                                 ),
                                 OptionPicker(
                                   label: 'Outfit',
@@ -196,6 +201,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                     PfpManager().chosenOutfit = option as SpriteGeneric;
                                     setState(() {});
                                   },
+                                  variantLockKey: 'outfitVariant',
                                   onVariantSelect: (option) {
                                     if (option == 'none') {
                                       PfpManager().chosenOutfit.chosenVariant = null;
@@ -323,7 +329,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(Icons.casino),
-                                        const SizedBox(
+                                        SizedBox(
                                           width: 10,
                                         ),
                                         Text('Randomize'),
@@ -384,7 +390,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Icons.casino,
                                                   size: 18,
                                                 ),

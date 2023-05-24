@@ -224,12 +224,19 @@ class _OptionPickerState extends State<OptionPicker> {
       var index = 0;
       if (widget.canBeNull) {
         if (widget.selectedOption == null) {
-          index = widget.optionList!.length;
+          index = widget.optionList!.length - 1;
         } else {
           index = widget.optionList!.indexOf(widget.selectedOption!);
         }
         if (index <= 0) {
           return 'none';
+        } else {
+          index--;
+        }
+      } else {
+        index = widget.optionList!.indexOf(widget.selectedOption!);
+        if (index <= 0) {
+          index = widget.optionList!.length - 1;
         } else {
           index--;
         }

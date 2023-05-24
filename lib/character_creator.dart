@@ -81,7 +81,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
       _randomizeVariant(PfpManager().chosenHair, previousHair, 'hairVariant');
 
       // Nose randomisation
-      var previousNose = PfpManager().chosenOutfit;
+      var previousNose = PfpManager().chosenNose;
       !PfpManager().lockedOptions['nose']!
           ? PfpManager().chosenNose = PfpManager().chosenBody.noseOptions[Random().nextInt(PfpManager().chosenBody.noseOptions.length)]
           : null;
@@ -141,7 +141,7 @@ class _PageCharacterCreatorState extends State<PageCharacterCreator> {
   }
 
   void _randomizeVariant(SpriteGeneric? sprite, SpriteGeneric? previousSprite, String variantLockKey) {
-    if (previousSprite != null) {
+    if (previousSprite != null && !PfpManager().lockedOptions[variantLockKey]!) {
       previousSprite.chosenVariant = null;
     }
 

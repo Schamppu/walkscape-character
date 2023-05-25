@@ -226,9 +226,11 @@ class ProviderOptionInterfaceNotifier extends StateNotifier<ProviderOptionInterf
     required List<StateNotifierProvider<ProviderColorOptionNotifier, ProviderColorOptionClass>> colorProviderList,
     String? chosenVariantPath,
   }) {
+    // Remvoes all options that have ex_ prefix in their name.
+    List<OptionInterface> removeExclusives = List<OptionInterface>.from(optionList).where((option) => !option.name.contains('ex_')).toList();
     state = state.copyWith(
       chosenOption: defaultChoice,
-      list: optionList,
+      list: PfpManager().developer ? optionList : removeExclusives,
       canBeNulled: canBeNulled,
       type: type,
       label: label,

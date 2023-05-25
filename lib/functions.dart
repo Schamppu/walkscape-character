@@ -401,3 +401,11 @@ void openChoiceSheet({
     },
   );
 }
+
+/// Sorts two string by names
+int sortByNames(String a, String b) {
+  if (a.length > b.length) {
+    return 1;
+  }
+  return a.toLowerCase().compareTo(b.toLowerCase());
+}

@@ -43,22 +43,15 @@ class SpriteBody implements OptionInterface {
     addGeneric('$rootFolder$folder/outfit/', outfitOptions, layerOutfit, null, 'outfit');
     addGeneric('$rootFolder$folder/eyes/', eyeOptions, layerEyes, null, 'eyes');
     addGeneric('$rootFolder$folder/face_accessories/', faceAccessoryOptions, layerFaceAccessory, null, 'faceAccessory');
-    faceOptions.sort(sortByNames);
-    noseOptions.sort(sortByNames);
-    hairOptions.sort(sortByNames);
-    outfitOptions.sort(sortByNames);
-    eyeOptions.sort(sortByNames);
-    faceAccessoryOptions.sort(sortByNames);
+    faceOptions.sort((a, b) => sortByNames(a.name, b.name));
+    noseOptions.sort((a, b) => sortByNames(a.name, b.name));
+    hairOptions.sort((a, b) => sortByNames(a.name, b.name));
+    outfitOptions.sort((a, b) => sortByNames(a.name, b.name));
+    eyeOptions.sort((a, b) => sortByNames(a.name, b.name));
+    faceAccessoryOptions.sort((a, b) => sortByNames(a.name, b.name));
     irisPath = '$rootFolder$folder/iris/iris.png';
     for (var nose in noseOptions) {
       print(nose.spritePath);
     }
-  }
-
-  int sortByNames(OptionInterface a, OptionInterface b) {
-    if (a.name.length > b.name.length) {
-      return 1;
-    }
-    return a.name.toLowerCase().compareTo(b.name.toLowerCase());
   }
 }

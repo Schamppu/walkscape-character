@@ -38,6 +38,9 @@ class PfpManager {
   /// Whether or not the app has already been initialized
   var initialized = false;
 
+  /// Is developer mode on/off
+  var developer = false;
+
   /// List of all option providers
   final List<StateNotifierProvider<ProviderOptionInterfaceNotifier, ProviderOptionInterfaceClass>> optionProviders = [
     providerChosenBackground,
@@ -84,6 +87,7 @@ class PfpManager {
         imagePaths.add(path);
       }
     }
+    imagePaths.sort((a, b) => sortByNames(a, b));
   }
 
   /// Initializes the PFP options by loading them from /assets and adding them to data structures
@@ -112,7 +116,7 @@ void addGeneric(String fileFolder, List<SpriteGeneric> list, int layer, int? sup
   for (var option in files) {
     var path = '$fileFolder$option';
     var name = option.replaceAll('.png', '');
-    if (!name.contains('_var') && !name.contains('_supp')) {
+    if (!name.contains('_var') && !name.contains('_bck') && path.contains(fileFolder)) {
       var optionAdded = SpriteGeneric(name: option.replaceAll('.png', ''), spritePath: path, layer: layer, supplementaryLayer: supplementaryLayer, type: type);
       list.add(optionAdded);
     }
@@ -127,8 +131,10 @@ void addVariants(String fileFolder, List<SpriteGeneric> list) {
   for (var option in files) {
     var path = '$fileFolder$option';
     var optionName = option.replaceAll('.png', '');
+    print(path);
+    print(fileFolder);
     // Get variants
-    if (optionName.contains('_var')) {
+    if (optionName.contains('_var') && path.contains(fileFolder)) {
       var index = list.indexWhere((sprite) => sprite.name.contains(option.split('_var')[0]));
       if (index != -1) {
         list[index].variants.addAll({'variant ${list[index].variants.length + 1}': path});
@@ -144,8 +150,8 @@ void addSupplementaries(String fileFolder, List<SpriteGeneric> list) {
     var path = '$fileFolder$option';
     var optionName = option.replaceAll('.png', '');
     // Get variants
-    if (optionName.contains('_supp')) {
-      var index = list.indexWhere((sprite) => sprite.name.contains(option.split('_supp')[0]));
+    if (optionName.contains('_bck') && path.contains(fileFolder)) {
+      var index = list.indexWhere((sprite) => sprite.name.contains(option.split('_bck')[0]));
       if (index != -1) {
         list[index].supplementaryPath = path;
       }

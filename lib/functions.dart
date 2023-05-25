@@ -12,7 +12,7 @@ import 'package:image/image.dart' as img;
 
 /// Initializes all of the providers with default settings
 void initProviders(WidgetRef ref) {
-  final body = PfpManager().optionsBody.first;
+  final body = PfpManager().optionsBody.firstWhere((option) => !option.name.contains('ex_'));
   ref.read(providerChosenBody.notifier).init(
     defaultChoice: body,
     optionList: PfpManager().optionsBody,
@@ -39,7 +39,7 @@ void initProviders(WidgetRef ref) {
       layer: layerBackAccessory,
       colorProviderList: []);
   ref.read(providerChosenNose.notifier).init(
-      defaultChoice: body.noseOptions.first,
+      defaultChoice: body.noseOptions.firstWhere((option) => !option.name.contains('ex_')),
       optionList: body.noseOptions,
       canBeNulled: false,
       type: LayerType.nose,
@@ -47,7 +47,7 @@ void initProviders(WidgetRef ref) {
       layer: layerNose,
       colorProviderList: []);
   ref.read(providerChosenHair.notifier).init(
-    defaultChoice: body.hairOptions.first,
+    defaultChoice: body.hairOptions.firstWhere((option) => !option.name.contains('ex_')),
     optionList: body.hairOptions,
     canBeNulled: false,
     type: LayerType.hair,
@@ -56,7 +56,7 @@ void initProviders(WidgetRef ref) {
     colorProviderList: [providerColorHair],
   );
   ref.read(providerChosenFace.notifier).init(
-        defaultChoice: body.faceOptions.first,
+        defaultChoice: body.faceOptions.firstWhere((option) => !option.name.contains('ex_')),
         optionList: body.faceOptions,
         canBeNulled: false,
         type: LayerType.face,
@@ -66,7 +66,7 @@ void initProviders(WidgetRef ref) {
         chosenVariantPath: body.faceOptions.first.variants.values.first,
       );
   ref.read(providerChosenOutfit.notifier).init(
-    defaultChoice: body.outfitOptions.first,
+    defaultChoice: body.outfitOptions.firstWhere((option) => !option.name.contains('ex_')),
     optionList: body.outfitOptions,
     canBeNulled: false,
     type: LayerType.outfit,

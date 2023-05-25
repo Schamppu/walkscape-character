@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         const Breakpoint(start: 451, end: 950, name: TABLET),
         const Breakpoint(start: 951, end: double.infinity, name: DESKTOP),
       ]),
-      home: const PageIntro(),
+      home: PageIntro(),
     );
   }
 }

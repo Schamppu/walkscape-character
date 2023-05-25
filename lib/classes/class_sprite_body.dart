@@ -50,8 +50,5 @@ class SpriteBody implements OptionInterface {
     eyeOptions.sort((a, b) => sortByNames(a.name, b.name));
     faceAccessoryOptions.sort((a, b) => sortByNames(a.name, b.name));
     irisPath = '$rootFolder$folder/iris/iris.png';
-    for (var nose in noseOptions) {
-      print(nose.spritePath);
-    }
   }
 }

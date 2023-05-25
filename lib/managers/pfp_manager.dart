@@ -96,12 +96,10 @@ class PfpManager {
     // Get folders containing bodies. Remove back_accessories from the list to only count for bodies.
     final bodyFolders = getSubFolders(rootFolder, imagePaths);
     bodyFolders.remove('back_accessories');
-    bodyFolders.remove('backgrounds');
     // Add back accessories to their corresponding data structure
     addGeneric('${rootFolder}back_accessories/', optionsBackAccessory, layerBackAccessory, null, 'backAccessories');
     // Add backgrounds to their corresponding data structure
     addGeneric('${rootFolder}backgrounds/', optionsBackground, -1, null, 'background');
-    optionsBackground.clear(); // TODO: Take this away so backgrounds can be used
     for (var folder in bodyFolders) {
       final addedBody = SpriteBody(name: folder, spritePath: '$rootFolder$folder/bodies/body.png', layer: layerBody);
       optionsBody.add(addedBody);
@@ -131,8 +129,6 @@ void addVariants(String fileFolder, List<SpriteGeneric> list) {
   for (var option in files) {
     var path = '$fileFolder$option';
     var optionName = option.replaceAll('.png', '');
-    print(path);
-    print(fileFolder);
     // Get variants
     if (optionName.contains('_var') && path.contains(fileFolder)) {
       var index = list.indexWhere((sprite) => sprite.name.contains(option.split('_var')[0]));

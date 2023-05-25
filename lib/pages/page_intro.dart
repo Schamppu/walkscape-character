@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:walkscape_characters/functions.dart';
 import 'package:walkscape_characters/managers/pfp_manager.dart';
@@ -11,9 +13,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
 class PageIntro extends ConsumerWidget {
-  const PageIntro({super.key});
+  PageIntro({super.key});
+  final TextEditingController _controller = TextEditingController();
 
+  /// Creates a route to the main application
   Route _createRoute(BuildContext context, WidgetRef ref) {
+    /// Initializes the providers
     if (!PfpManager().initialized) {
       initProviders(ref);
       PfpManager().initialized = true;
@@ -38,11 +43,54 @@ class PageIntro extends ConsumerWidget {
     );
   }
 
+  /// Goes to the website
   void _goToWebsite() {
     final anchor = html.AnchorElement(href: 'https://walkscape.app')..target = 'blank';
     html.document.body?.append(anchor);
     anchor.click();
     anchor.remove();
+  }
+
+  /// Loads the password from a text file
+  Future<String?> _loadPassword(BuildContext context) async {
+    try {
+      return await rootBundle.loadString(kDebugMode ? 'dev.txt' : 'assets/dev.txt');
+    } catch (e) {
+      Fluttertoast.showToast(
+          gravity: ToastGravity.TOP,
+          msg: 'Failed to load the password file',
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+          webBgColor: '#FF5733',
+          webPosition: 'center');
+      return null;
+    }
+  }
+
+  /// Checks if the password is correct to unlock developer mode
+  Future<void> _checkPassword(BuildContext context) async {
+    print('asd');
+    final password = await _loadPassword(context);
+    if (password != null) {
+      if (_controller.text == password) {
+        // Password is correct
+        PfpManager().developer = true;
+        Fluttertoast.showToast(
+            gravity: ToastGravity.TOP,
+            msg: 'Developer mode activated!',
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            webBgColor: '#2BD61C',
+            webPosition: 'center');
+        Navigator.pop(context);
+      } else {
+        // Password is wrong
+        Fluttertoast.showToast(
+            gravity: ToastGravity.TOP,
+            msg: 'Wrong password',
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
+            webBgColor: '#FF5733',
+            webPosition: 'center');
+      }
+    }
   }
 
   @override
@@ -59,11 +107,49 @@ class PageIntro extends ConsumerWidget {
                   opacity: Theme.of(context).brightness == Brightness.dark ? 0.5 : 0.2,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: SvgPicture.asset(
-                      kDebugMode ? 'logo_cutcorners.svg' : 'assets/logo_cutcorners.svg',
-                      semanticsLabel: 'WalkScape logo',
-                      width: ResponsiveBreakpoints.of(context).isDesktop ? 128 : 64,
-                      height: ResponsiveBreakpoints.of(context).isDesktop ? 128 : 64,
+                    child: GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: SizedBox(
+                                  width: getCardWidth(),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text('Enter password for developer mode:'),
+                                      TextField(
+                                        controller: _controller,
+                                        onSubmitted: (string) {
+                                          _checkPassword(context);
+                                        },
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 15.0),
+                                        child: FilledButton(
+                                            onPressed: () {
+                                              // Try if the developer password is correct.
+                                              _checkPassword(context);
+                                            },
+                                            child: const Text('Submit')),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: SvgPicture.asset(
+                        kDebugMode ? 'logo_cutcorners.svg' : 'assets/logo_cutcorners.svg',
+                        semanticsLabel: 'WalkScape logo',
+                        width: ResponsiveBreakpoints.of(context).isDesktop ? 128 : 64,
+                        height: ResponsiveBreakpoints.of(context).isDesktop ? 128 : 64,
+                      ),
                     ),
                   ).animate().scale(delay: 800.ms, duration: 500.ms, curve: Curves.easeInOutCirc),
                 ),

@@ -158,7 +158,7 @@ class ProviderOptionInterfaceNotifier extends StateNotifier<ProviderOptionInterf
   void randomize(WidgetRef ref) {
     // Check if the option is locked
     if (!PfpManager().lockedOptions[state.type]!) {
-      if (state.canBeNulled != true || Random().nextInt(5) == 0) {
+      if (state.canBeNulled != true || Random().nextInt(state.type == LayerType.background ? 2 : 5) == 0) {
         // If not a body, just choose a new type
         if (state.type != LayerType.body && state.list.isNotEmpty) {
           state = state.copyWith(chosenOption: state.list[Random().nextInt(state.list.length)]);

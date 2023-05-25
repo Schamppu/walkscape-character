@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:walkscape_characters/page_intro.dart';
-import 'package:walkscape_characters/pfp_manager.dart';
+import 'package:walkscape_characters/pages/page_intro.dart';
+import 'package:walkscape_characters/managers/pfp_manager.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PfpManager().initPfp();
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

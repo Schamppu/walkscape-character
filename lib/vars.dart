@@ -10,6 +10,8 @@ const layerFaceAccessory = 6;
 const layerEyes = 7;
 const layerHair = 8;
 
+const rootFolder = 'assets/pfp/';
+
 const colorOptionsSkin = {
   'very light': [
     Color.fromARGB(255, 191, 111, 74),

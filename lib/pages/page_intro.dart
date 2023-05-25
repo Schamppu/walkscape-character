@@ -1,19 +1,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:walkscape_characters/character_creator.dart';
+import 'package:walkscape_characters/functions.dart';
+import 'package:walkscape_characters/managers/pfp_manager.dart';
+import 'package:walkscape_characters/pages/page_character_creator.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
-class PageIntro extends StatelessWidget {
+class PageIntro extends ConsumerWidget {
   const PageIntro({super.key});
 
-  Route _createRoute() {
+  Route _createRoute(BuildContext context, WidgetRef ref) {
+    if (!PfpManager().initialized) {
+      initProviders(ref);
+      PfpManager().initialized = true;
+    }
     return PageRouteBuilder(
       transitionDuration: 1000.ms,
-      pageBuilder: (context, animation, secondaryAnimation) => const PageCharacterCreator(
+      pageBuilder: (context, animation, secondaryAnimation) => PageCharacterCreator(
         title: 'WalkScape Character Customisation',
       ),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -39,7 +46,7 @@ class PageIntro extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: Center(
         child: Padding(
@@ -86,7 +93,7 @@ class PageIntro extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 20.0),
                   child: FilledButton(
                           onPressed: () {
-                            Navigator.push(context, _createRoute());
+                            Navigator.push(context, _createRoute(context, ref));
                           },
                           child: Text('Begin'))
                       .animate()

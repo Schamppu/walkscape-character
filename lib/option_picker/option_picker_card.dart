@@ -17,6 +17,7 @@ class OptionPickerCard extends ConsumerWidget {
   final LayerType? optionLockKey;
 
   Widget _getVariantPicker(WidgetRef ref) {
+    ref.watch(provider);
     if (ref.read(provider).chosenOption.runtimeType == SpriteGeneric) {
       if ((ref.read(provider).chosenOption as SpriteGeneric).variants.isNotEmpty) {
         return OptionPickerVariant(provider: provider);

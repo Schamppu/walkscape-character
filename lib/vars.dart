@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
+const layerFacepaint = -1;
 const layerBackAccessory = 0;
 const layerHairSupp = 1;
+const layerHeadwearSupp = 1;
 const layerBody = 2;
 const layerOutfit = 3;
 const layerFace = 4;
-const layerNose = 5;
-const layerFaceAccessory = 6;
-const layerEyes = 7;
-const layerHair = 8;
+const layerNose = 6;
+const layerFaceAccessory = 7;
+const layerEyes = 8;
+const layerHair = 9;
+const layerHeadwear = 10;
 
 const rootFolder = 'assets/pfp/';
 
@@ -322,27 +325,27 @@ const colorOptionsHair = {
     Color.fromARGB(255, 204, 47, 123),
     Color.fromARGB(255, 255, 82, 119),
   ],
-  'blue tinted darkest': [
+  'blueish darkest': [
     Color.fromARGB(255, 14, 7, 27),
     Color.fromARGB(255, 26, 25, 50),
     Color.fromARGB(255, 42, 47, 78),
   ],
-  'blue tinted darker': [
+  'blueish darker': [
     Color.fromARGB(255, 26, 25, 50),
     Color.fromARGB(255, 42, 47, 78),
     Color.fromARGB(255, 66, 76, 110),
   ],
-  'blue tinted dark': [
+  'blueish dark': [
     Color.fromARGB(255, 42, 47, 78),
     Color.fromARGB(255, 66, 76, 110),
     Color.fromARGB(255, 101, 115, 146),
   ],
-  'blue tinted': [
+  'blueish': [
     Color.fromARGB(255, 66, 76, 110),
     Color.fromARGB(255, 101, 115, 146),
     Color.fromARGB(255, 146, 161, 185),
   ],
-  'light blue tinted': [
+  'light blueish': [
     Color.fromARGB(255, 101, 115, 146),
     Color.fromARGB(255, 146, 161, 185),
     Color.fromARGB(255, 199, 207, 221),
@@ -447,5 +450,26 @@ const colorOptionsEyebrowns = {
   ],
   'purple': [
     Color.fromARGB(255, 75, 29, 82),
+  ],
+};
+
+const colorOptionsFacepaint = {
+  'red': [
+    Color.fromARGB(255, 80, 42, 42),
+    Color.fromARGB(255, 129, 46, 46),
+    Color.fromARGB(255, 177, 46, 46),
+    Color.fromARGB(255, 219, 37, 37),
+  ],
+  'white': [
+    Color.fromARGB(255, 99, 103, 143),
+    Color.fromARGB(255, 144, 148, 187),
+    Color.fromARGB(255, 167, 169, 189),
+    Color.fromARGB(255, 220, 221, 236),
+  ],
+  'blue': [
+    Color.fromARGB(255, 62, 67, 134),
+    Color.fromARGB(255, 70, 78, 180),
+    Color.fromARGB(255, 104, 112, 226),
+    Color.fromARGB(255, 166, 170, 238),
   ],
 };

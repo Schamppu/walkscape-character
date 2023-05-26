@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:walkscape_characters/functions.dart';
 import 'package:walkscape_characters/managers/pfp_manager.dart';
@@ -56,12 +55,15 @@ class PageIntro extends ConsumerWidget {
     try {
       return await rootBundle.loadString(kDebugMode ? 'dev.txt' : 'assets/dev.txt');
     } catch (e) {
-      Fluttertoast.showToast(
-          gravity: ToastGravity.TOP,
-          msg: 'Failed to load the password file',
-          backgroundColor: Theme.of(context).colorScheme.errorContainer,
-          webBgColor: '#FF5733',
-          webPosition: 'center');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: SimpleShadow(
+          child: Text(
+            'Failed to load secret password file.',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
+          ),
+        ),
+        backgroundColor: Colors.red[600],
+      ));
       return null;
     }
   }
@@ -72,23 +74,42 @@ class PageIntro extends ConsumerWidget {
     final password = await _loadPassword(context);
     if (password != null) {
       if (_controller.text == password) {
-        // Password is correct
-        PfpManager().developer = true;
-        Fluttertoast.showToast(
-            gravity: ToastGravity.TOP,
-            msg: 'Developer mode activated!',
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            webBgColor: '#2BD61C',
-            webPosition: 'center');
+        if (!PfpManager().initialized) {
+          // Password is correct
+          PfpManager().developer = true;
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: SimpleShadow(
+              child: Text(
+                'Developer mode activated!',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
+              ),
+            ),
+            backgroundColor: Colors.green[600],
+          ));
+        } else {
+          // App is already initialized and needs to be restarted
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: SimpleShadow(
+              child: Text(
+                'App is already initialized. Refresh the app and activate developer mode immediately before pressing "begin".',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
+              ),
+            ),
+            backgroundColor: Colors.red[600],
+          ));
+        }
         Navigator.pop(context);
       } else {
         // Password is wrong
-        Fluttertoast.showToast(
-            gravity: ToastGravity.TOP,
-            msg: 'Wrong password',
-            backgroundColor: Theme.of(context).colorScheme.errorContainer,
-            webBgColor: '#FF5733',
-            webPosition: 'center');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: SimpleShadow(
+            child: Text(
+              'Password is incorrect',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
+            ),
+          ),
+          backgroundColor: Colors.red[600],
+        ));
       }
     }
   }
@@ -112,31 +133,34 @@ class PageIntro extends ConsumerWidget {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return Dialog(
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: SizedBox(
-                                  width: getCardWidth(),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Text('Enter password for developer mode:'),
-                                      TextField(
-                                        controller: _controller,
-                                        onSubmitted: (string) {
-                                          _checkPassword(context);
-                                        },
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 15.0),
-                                        child: FilledButton(
-                                            onPressed: () {
-                                              // Try if the developer password is correct.
-                                              _checkPassword(context);
-                                            },
-                                            child: const Text('Submit')),
-                                      )
-                                    ],
+                            return Scaffold(
+                              backgroundColor: Colors.transparent,
+                              body: Dialog(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: SizedBox(
+                                    width: getCardWidth(),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Text('Enter password for developer mode:'),
+                                        TextField(
+                                          controller: _controller,
+                                          onSubmitted: (string) {
+                                            _checkPassword(context);
+                                          },
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 15.0),
+                                          child: FilledButton(
+                                              onPressed: () {
+                                                // Try if the developer password is correct.
+                                                _checkPassword(context);
+                                              },
+                                              child: const Text('Submit')),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

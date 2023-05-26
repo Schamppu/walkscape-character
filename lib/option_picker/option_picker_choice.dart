@@ -17,15 +17,19 @@ class OptionPickerChoice extends ConsumerWidget {
 
   Widget _getColor(WidgetRef ref) {
     final colorProvider = (provider as StateNotifierProvider<ProviderColorOptionNotifier, ProviderColorOptionClass>);
-    return (Container(
-      margin: const EdgeInsets.only(right: 10),
-      width: 20,
-      height: 20,
-      decoration: BoxDecoration(
-          color: ref.read(colorProvider).colorMap[ref.read(colorProvider).changePalette]!.last,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white54)),
-    ));
+    if (ref.read(colorProvider).colorMap[ref.read(colorProvider).changePalette] != null) {
+      return (Container(
+        margin: const EdgeInsets.only(right: 10),
+        width: 20,
+        height: 20,
+        decoration: BoxDecoration(
+            color: ref.read(colorProvider).colorMap[ref.read(colorProvider).changePalette]!.last,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white54)),
+      ));
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 
   String _getText(WidgetRef ref) {

@@ -251,6 +251,8 @@ final providerChosenOutfit = StateNotifierProvider<ProviderOptionInterfaceNotifi
 final providerChosenFaceAccessory = StateNotifierProvider<ProviderOptionInterfaceNotifier, ProviderOptionInterfaceClass>((ref) => ProviderOptionInterfaceNotifier());
 final providerChosenBackAccessory = StateNotifierProvider<ProviderOptionInterfaceNotifier, ProviderOptionInterfaceClass>((ref) => ProviderOptionInterfaceNotifier());
 final providerChosenEyes = StateNotifierProvider<ProviderOptionInterfaceNotifier, ProviderOptionInterfaceClass>((ref) => ProviderOptionInterfaceNotifier());
+final providerChosenHeadwear = StateNotifierProvider<ProviderOptionInterfaceNotifier, ProviderOptionInterfaceClass>((ref) => ProviderOptionInterfaceNotifier());
+final providerChosenFacepaint = StateNotifierProvider<ProviderOptionInterfaceNotifier, ProviderOptionInterfaceClass>((ref) => ProviderOptionInterfaceNotifier());
 
 /// Class for a color option
 class ProviderColorOptionClass {
@@ -337,3 +339,4 @@ final providerColorHair = StateNotifierProvider<ProviderColorOptionNotifier, Pro
 final providerColorFacialHair = StateNotifierProvider<ProviderColorOptionNotifier, ProviderColorOptionClass>((ref) => ProviderColorOptionNotifier());
 final providerColorEyebrows = StateNotifierProvider<ProviderColorOptionNotifier, ProviderColorOptionClass>((ref) => ProviderColorOptionNotifier());
 final providerColorEyes = StateNotifierProvider<ProviderColorOptionNotifier, ProviderColorOptionClass>((ref) => ProviderColorOptionNotifier());
+final providerColorFacepaint = StateNotifierProvider<ProviderColorOptionNotifier, ProviderColorOptionClass>((ref) => ProviderColorOptionNotifier());

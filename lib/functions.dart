@@ -92,6 +92,24 @@ void initProviders(WidgetRef ref) {
     layer: layerEyes,
     colorProviderList: [],
   );
+  ref.read(providerChosenHeadwear.notifier).init(
+    defaultChoice: null,
+    optionList: body.headwearOptions,
+    canBeNulled: true,
+    type: LayerType.headwear,
+    label: 'Headwear',
+    layer: layerHeadwear,
+    colorProviderList: [],
+  );
+  ref.read(providerChosenFacepaint.notifier).init(
+    defaultChoice: null,
+    optionList: PfpManager().optionsFacepaint,
+    canBeNulled: true,
+    type: LayerType.facepaint,
+    label: 'Face paint',
+    layer: layerFacepaint,
+    colorProviderList: [providerColorFacepaint],
+  );
   ref.read(providerColorBackground.notifier).init(
         defaultPalette: 'red',
         changePalette: 'red',
@@ -111,7 +129,7 @@ void initProviders(WidgetRef ref) {
   ref.read(providerColorHair.notifier).init(
         defaultPalette: 'darkest brown',
         changePalette: 'darkest brown',
-        typeList: [LayerType.hair],
+        typeList: [LayerType.hair, LayerType.headwear],
         colorMap: colorOptionsHair,
         label: 'Hair color',
       );
@@ -135,6 +153,13 @@ void initProviders(WidgetRef ref) {
         typeList: [LayerType.iris],
         colorMap: colorOptionsEyes,
         label: 'Eye color',
+      );
+  ref.read(providerColorFacepaint.notifier).init(
+        defaultPalette: 'red',
+        changePalette: 'red',
+        typeList: [LayerType.facepaint],
+        colorMap: colorOptionsFacepaint,
+        label: 'Face paint color',
       );
 }
 
@@ -201,6 +226,61 @@ Future<Uint8List> switchColorPalette({required String imagePath, required List<C
     }
   }
   return img.encodePng(image);
+}
+
+/// A function that paints the facepaint over the face
+Future<Uint8List> switchColorPaletteFacepaint(WidgetRef ref) async {
+  late Uint8List faceBytes;
+  late Uint8List facepaintBytes;
+  final face = ref.read(providerChosenFace).chosenOption! as SpriteGeneric;
+  final facepaint = ref.read(providerChosenFacepaint).chosenOption! as SpriteGeneric;
+  await rootBundle.load(facepaint.spritePath).then((data) => facepaintBytes = data.buffer.asUint8List());
+  await rootBundle.load(face.spritePath).then((data) => faceBytes = data.buffer.asUint8List());
+
+  // Decode the bytes to [Image] type
+  final faceImage = img.decodeImage(faceBytes);
+  final facepaintImage = img.decodeImage(facepaintBytes);
+
+  // Convert the [Image] to RGBA formatted pixels
+  final facePixels = faceImage!.getBytes(order: img.ChannelOrder.rgba);
+  final facepaintPixels = facepaintImage!.getBytes(order: img.ChannelOrder.rgba);
+
+  // Get default skin palette
+  final skinPalette = colorOptionsSkin[ref.read(providerColorSkin).defaultPalette];
+
+  // Get currently chosen facepaint palette
+  final facepaintPalette = colorOptionsFacepaint[ref.read(providerColorFacepaint).changePalette];
+
+  // Get the Pixel Length
+  final int pixelLength = facepaintPixels.lengthInBytes;
+
+  /// Go through the facepaint layer. Where ever there is color, recolor based of the skin layer
+  if (skinPalette != null && facepaintPalette != null) {
+    for (var i = 0; i < pixelLength; i += 4) {
+      var didChange = false;
+      // If the pixel isn't transparent
+      if (facepaintPixels[i + 3] != 0) {
+        // Recolor based on the skin color
+        for (var c = 0; c < skinPalette.length; c++) {
+          final color = skinPalette[c];
+          // print('face: ${facePixels[i]}, palette: ${color.red}');
+          if (facePixels[i] == color.red && facePixels[i + 1] == color.green && facePixels[i + 2] == color.blue) {
+            facepaintPixels[i] = facepaintPalette[c].red;
+            facepaintPixels[i + 1] = facepaintPalette[c].green;
+            facepaintPixels[i + 2] = facepaintPalette[c].blue;
+            didChange = true;
+            break;
+          }
+        }
+        // If the color didn't change, make the pixel transparent
+        if (!didChange) {
+          // Change the alpha to 0
+          facepaintPixels[i + 3] = 0;
+        }
+      }
+    }
+  }
+  return img.encodePng(facepaintImage);
 }
 
 Size getSpriteSize(BuildContext context) {

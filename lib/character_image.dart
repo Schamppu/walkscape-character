@@ -23,6 +23,9 @@ class CharacterImage extends ConsumerWidget {
     if (layer == layerHairSupp && type == LayerType.hair) {
       return providerChosenHair;
     }
+    if (layer == layerHeadwearSupp && type == LayerType.headwear) {
+      return providerChosenHeadwear;
+    }
     return null;
   }
 
@@ -43,6 +46,13 @@ class CharacterImage extends ConsumerWidget {
         final provider = _getSupplementaryProvider(i, ref.read(spriteProvider).type);
         if (provider != null) {
           returnList.add(SpriteBuilder(spriteProvider: provider, width: width, height: height, supplementary: true));
+        }
+        // If it's the face layer, also draw the face paint layer over it
+        if (i == layerFace) {
+          returnList.add(FacepaintBuilder(
+            width: width,
+            height: height,
+          ));
         }
       }
     }
@@ -91,7 +101,7 @@ class BackgroundImage extends ConsumerWidget {
                   bg.spritePath,
                   width: width,
                   height: height,
-                ).blurred(blur: 3, colorOpacity: 0.0),
+                ).blurred(blur: 2, colorOpacity: 0.0),
                 // Background gradient
                 Container(
                   width: width * 2,
@@ -138,12 +148,14 @@ class SpriteBuilder extends ConsumerWidget {
   /// Returns the path of the sprite
   String? _getSpritePath(OptionInterface sprite, WidgetRef ref) {
     if (supplementary) {
-      var layer = (sprite as SpriteGeneric).supplementaryLayer;
-      var path = sprite.supplementaryPath;
-      if (layer != null && path != null) {
-        return sprite.supplementaryPath!;
-      } else {
-        return null;
+      ref.watch(spriteProvider).chosenOption;
+      var path = (sprite as SpriteGeneric).spritePath;
+      if (ref.read(spriteProvider).chosenVariantPath != null) {
+        path = ref.read(spriteProvider).chosenVariantPath!;
+      }
+      var index = imagePaths.indexWhere((element) => path.replaceAll('.png', '') == element.replaceAll('_bck.png', ''));
+      if (index != -1) {
+        return imagePaths[index];
       }
     } else {
       if (ref.read(spriteProvider).chosenVariantPath != null) {
@@ -151,6 +163,7 @@ class SpriteBuilder extends ConsumerWidget {
       }
       return sprite.spritePath;
     }
+    return null;
   }
 
   @override
@@ -162,9 +175,15 @@ class SpriteBuilder extends ConsumerWidget {
       }
     }
     final sprite = ref.watch(spriteProvider).chosenOption;
+    // If this is the hair layer also watch if headwear changes
+    if (ref.read(spriteProvider).type == LayerType.hair) {
+      ref.watch(providerChosenHeadwear).chosenOption;
+    }
     final List<Color> defaultColor = getDefaultColor(spriteProvider, ref);
     final List<Color> changeColor = getChangedColor(spriteProvider, ref);
-    return sprite != null && _getSpritePath(sprite, ref) != null
+    return (sprite != null &&
+            _getSpritePath(sprite, ref) != null &&
+            !(ref.read(spriteProvider).type == LayerType.hair && ref.read(providerChosenHeadwear).chosenOption != null))
         ? Stack(
             children: [
               // Sprite
@@ -240,5 +259,41 @@ class IrisBuilder extends ConsumerWidget {
                     : const SizedBox.shrink(),
               )
             : const SizedBox.shrink();
+  }
+}
+
+/// Paints the facepaint over the face
+class FacepaintBuilder extends ConsumerWidget {
+  const FacepaintBuilder({super.key, required this.width, required this.height});
+  final double width;
+  final double height;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    /// Watch the options if they change
+    final facepaint = ref.watch(providerChosenFacepaint).chosenOption;
+    ref.watch(providerChosenFace).chosenOption;
+    ref.watch(providerColorFacepaint).changePalette;
+    return SizedBox(
+      child: facepaint != null
+          ? FutureBuilder(
+              future: switchColorPaletteFacepaint(ref),
+              builder: (_, AsyncSnapshot<Uint8List> snapshot) {
+                return snapshot.hasData
+                    ? Image.memory(
+                        snapshot.data!,
+                        width: width,
+                        height: height,
+                        scale: 0.1,
+                        filterQuality: FilterQuality.none,
+                        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                          return child;
+                        },
+                      )
+                    : const SizedBox.shrink();
+              },
+            )
+          : const SizedBox.shrink(),
+    );
   }
 }

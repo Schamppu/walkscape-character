@@ -21,6 +21,8 @@ enum LayerType {
   face,
   faceAccessory,
   iris,
+  headwear,
+  facepaint,
 }
 
 class PfpManager {
@@ -34,6 +36,7 @@ class PfpManager {
   final List<SpriteGeneric> optionsBackground = [];
   final List<SpriteBody> optionsBody = [];
   final List<SpriteGeneric> optionsBackAccessory = [];
+  final List<SpriteGeneric> optionsFacepaint = [];
 
   /// Whether or not the app has already been initialized
   var initialized = false;
@@ -52,6 +55,8 @@ class PfpManager {
     providerChosenBackAccessory,
     providerChosenFaceAccessory,
     providerChosenEyes,
+    providerChosenHeadwear,
+    providerChosenFacepaint,
   ];
 
   /// List of all color providers
@@ -62,6 +67,7 @@ class PfpManager {
     providerColorFacialHair,
     providerColorEyebrows,
     providerColorEyes,
+    providerColorFacepaint,
   ];
 
   /// The lock options for locking randomization options
@@ -75,6 +81,8 @@ class PfpManager {
     LayerType.backAccessory: false,
     LayerType.faceAccessory: false,
     LayerType.eyes: false,
+    LayerType.headwear: false,
+    LayerType.facepaint: false,
   };
 
   /// Loads all image paths from certain path
@@ -96,8 +104,12 @@ class PfpManager {
     // Get folders containing bodies. Remove back_accessories from the list to only count for bodies.
     final bodyFolders = getSubFolders(rootFolder, imagePaths);
     bodyFolders.remove('back_accessories');
+    bodyFolders.remove('backgrounds');
+    bodyFolders.remove('facepaints');
     // Add back accessories to their corresponding data structure
     addGeneric('${rootFolder}back_accessories/', optionsBackAccessory, layerBackAccessory, null, 'backAccessories');
+    // Add back accessories to their corresponding data structure
+    addGeneric('${rootFolder}facepaints/', optionsFacepaint, layerFacepaint, layerFacepaint, 'facePaints');
     // Add backgrounds to their corresponding data structure
     addGeneric('${rootFolder}backgrounds/', optionsBackground, -1, null, 'background');
     for (var folder in bodyFolders) {
@@ -130,7 +142,7 @@ void addVariants(String fileFolder, List<SpriteGeneric> list) {
     var path = '$fileFolder$option';
     var optionName = option.replaceAll('.png', '');
     // Get variants
-    if (optionName.contains('_var') && path.contains(fileFolder)) {
+    if (optionName.contains('_var') && path.contains(fileFolder) && !optionName.contains('_bck')) {
       var index = list.indexWhere((sprite) => sprite.name.contains(option.split('_var')[0]));
       if (index != -1) {
         list[index].variants.addAll({'variant ${list[index].variants.length + 1}': path});

@@ -134,22 +134,46 @@ class ProviderOptionInterfaceNotifier extends StateNotifier<ProviderOptionInterf
     if (state.chosenOption.runtimeType == SpriteGeneric) {
       // Reset everything depending on which generic sprite this is
       (state.chosenOption as SpriteGeneric).type == 'nose'
-          ? state = state.copyWith(chosenOption: body.noseOptions.first, list: body.noseOptions, chosenVariantPath: null)
+          ? state = state.copyWith(
+              chosenOption: body.noseOptions.firstWhere((option) => !option.name.contains('ex_')),
+              list: body.noseOptions.where((option) => !option.name.contains('ex_') || PfpManager().developer).toList(),
+              chosenVariantPath: null,
+            )
           : null;
       (state.chosenOption as SpriteGeneric).type == 'hair'
-          ? state = state.copyWith(chosenOption: body.hairOptions.first, list: body.hairOptions, chosenVariantPath: null)
+          ? state = state.copyWith(
+              chosenOption: body.hairOptions.firstWhere((option) => !option.name.contains('ex_')),
+              list: body.hairOptions.where((option) => !option.name.contains('ex_') || PfpManager().developer).toList(),
+              chosenVariantPath: null,
+            )
           : null;
       (state.chosenOption as SpriteGeneric).type == 'face'
-          ? state = state.copyWith(chosenOption: body.faceOptions.first, list: body.faceOptions, chosenVariantPath: body.faceOptions.first.variants.values.first)
+          ? state = state.copyWith(
+              chosenOption: body.faceOptions.firstWhere((option) => !option.name.contains('ex_')),
+              list: body.faceOptions.where((option) => !option.name.contains('ex_') || PfpManager().developer).toList(),
+              chosenVariantPath: body.faceOptions.first.variants.values.first,
+            )
           : null;
       (state.chosenOption as SpriteGeneric).type == 'faceAccessory'
-          ? state = state.copyWith(chosenOption: body.faceAccessoryOptions.first, list: body.faceAccessoryOptions, chosenVariantPath: null)
+          ? state = state.copyWith(
+              chosenOption: body.faceAccessoryOptions.firstWhere((option) => !option.name.contains('ex_')),
+              list: body.faceAccessoryOptions.where((option) => !option.name.contains('ex_') || PfpManager().developer).toList(),
+              chosenVariantPath: null,
+            )
           : null;
       (state.chosenOption as SpriteGeneric).type == 'eyes'
-          ? state = state.copyWith(chosenOption: body.eyeOptions.first, list: body.eyeOptions, chosenVariantPath: null)
+          ? state = state.copyWith(
+              chosenOption: body.eyeOptions.firstWhere((option) => !option.name.contains('ex_')),
+              list: body.eyeOptions.where((option) => !option.name.contains('ex_') || PfpManager().developer).toList(),
+              chosenVariantPath: null,
+            )
           : null;
       (state.chosenOption as SpriteGeneric).type == 'outfit'
-          ? state = state.copyWith(chosenOption: body.outfitOptions.first, list: body.outfitOptions, chosenVariantPath: null)
+          ? state = state.copyWith(
+              chosenOption: body.outfitOptions.firstWhere((option) => !option.name.contains('ex_')),
+              list: body.outfitOptions.where((option) => !option.name.contains('ex_') || PfpManager().developer).toList(),
+              chosenVariantPath: null,
+            )
           : null;
     }
   }

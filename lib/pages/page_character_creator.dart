@@ -6,12 +6,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:walkscape_characters/capture_widget.dart';
 import 'package:walkscape_characters/character_image.dart';
 import 'package:walkscape_characters/classes/class_sprite_generic.dart';
 import 'package:walkscape_characters/option_picker/option_picker_card.dart';
 import 'package:walkscape_characters/managers/pfp_manager.dart';
 import 'package:walkscape_characters/providers.dart';
-import 'package:widgets_to_image/widgets_to_image.dart';
 import 'package:universal_html/html.dart' as html;
 
 double getCardWidth() {
@@ -21,7 +21,7 @@ double getCardWidth() {
 class PageCharacterCreator extends ConsumerWidget {
   PageCharacterCreator({super.key, required this.title});
   final String title;
-  final _controller = WidgetsToImageController();
+  final _controller = CaptureWidget();
   final chosenView = 0;
 
   /// Downloads a file from a list of bytes
@@ -35,8 +35,8 @@ class PageCharacterCreator extends ConsumerWidget {
   }
 
   /// Saves the image to local system
-  Future<void> _saveImage() async {
-    var bytes = await _controller.capture();
+  Future<void> _saveImage(BuildContext context) async {
+    var bytes = await _controller.capture(ResponsiveBreakpoints.of(context).isDesktop ? 3 : 6);
 
     if (bytes != null) {
       download(bytes, downloadName: 'ws_character.png');
@@ -89,7 +89,11 @@ class PageCharacterCreator extends ConsumerWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 15.0),
-            child: ElevatedButton(onPressed: _saveImage, child: const Text('Save as .png')),
+            child: ElevatedButton(
+                onPressed: () {
+                  _saveImage(context);
+                },
+                child: const Text('Save as .png')),
           )
         ],
       ),
@@ -129,7 +133,7 @@ class PageCharacterCreator extends ConsumerWidget {
                                 SizedBox(
                                   width: 256,
                                   height: 256,
-                                  child: WidgetsToImage(
+                                  child: ConvertWidgetToImage(
                                       controller: _controller,
                                       child: CharacterImage(
                                         width: 256,
@@ -169,7 +173,7 @@ class PageCharacterCreator extends ConsumerWidget {
                                 SizedBox(
                                   width: 128,
                                   height: 128,
-                                  child: WidgetsToImage(
+                                  child: ConvertWidgetToImage(
                                       controller: _controller,
                                       child: CharacterImage(
                                         width: 128,

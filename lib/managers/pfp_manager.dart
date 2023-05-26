@@ -35,7 +35,6 @@ class PfpManager {
 
   final List<SpriteGeneric> optionsBackground = [];
   final List<SpriteBody> optionsBody = [];
-  final List<SpriteGeneric> optionsBackAccessory = [];
 
   /// Whether or not the app has already been initialized
   var initialized = false;
@@ -102,11 +101,7 @@ class PfpManager {
     await _loadAllFiles(rootFolder);
     // Get folders containing bodies. Remove back_accessories from the list to only count for bodies.
     final bodyFolders = getSubFolders(rootFolder, imagePaths);
-    bodyFolders.remove('back_accessories');
     bodyFolders.remove('backgrounds');
-    bodyFolders.remove('facepaints');
-    // Add back accessories to their corresponding data structure
-    addGeneric('${rootFolder}back_accessories/', optionsBackAccessory, layerBackAccessory, null, 'backAccessories');
     // Add backgrounds to their corresponding data structure
     addGeneric('${rootFolder}backgrounds/', optionsBackground, -1, null, 'background');
     for (var folder in bodyFolders) {

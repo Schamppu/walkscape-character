@@ -43,8 +43,8 @@ class PageIntro extends ConsumerWidget {
   }
 
   /// Goes to the website
-  void _goToWebsite() {
-    final anchor = html.AnchorElement(href: 'https://walkscape.app')..target = 'blank';
+  void _goToWebsite(String url) {
+    final anchor = html.AnchorElement(href: url)..target = 'blank';
     html.document.body?.append(anchor);
     anchor.click();
     anchor.remove();
@@ -129,52 +129,58 @@ class PageIntro extends ConsumerWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Scaffold(
-                              backgroundColor: Colors.transparent,
-                              body: Dialog(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: SizedBox(
-                                    width: getCardWidth(),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Text('Enter password for developer mode:'),
-                                        TextField(
-                                          controller: _controller,
-                                          onSubmitted: (string) {
-                                            _checkPassword(context);
-                                          },
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(top: 15.0),
-                                          child: FilledButton(
-                                              onPressed: () {
-                                                // Try if the developer password is correct.
-                                                _checkPassword(context);
-                                              },
-                                              child: const Text('Submit')),
-                                        )
-                                      ],
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Scaffold(
+                                backgroundColor: Colors.transparent,
+                                body: Dialog(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: SizedBox(
+                                      width: getCardWidth(),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text('Enter password for developer mode:'),
+                                          TextField(
+                                            controller: _controller,
+                                            onSubmitted: (string) {
+                                              _checkPassword(context);
+                                            },
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 15.0),
+                                            child: FilledButton(
+                                                onPressed: () {
+                                                  // Try if the developer password is correct.
+                                                  _checkPassword(context);
+                                                },
+                                                child: const Text('Submit')),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: SvgPicture.asset(
-                        kDebugMode ? 'logo_cutcorners.svg' : 'assets/logo_cutcorners.svg',
-                        semanticsLabel: 'WalkScape logo',
-                        width: ResponsiveBreakpoints.of(context).isDesktop ? 128 : 64,
-                        height: ResponsiveBreakpoints.of(context).isDesktop ? 128 : 64,
-                      ),
-                    ),
+                              );
+                            },
+                          );
+                        },
+                        child: SvgPicture.asset(
+                          kDebugMode ? 'logo_cutcorners.svg' : 'assets/logo_cutcorners.svg',
+                          semanticsLabel: 'WalkScape logo',
+                          width: ResponsiveBreakpoints.of(context).isDesktop ? 128 : 64,
+                          height: ResponsiveBreakpoints.of(context).isDesktop ? 128 : 64,
+                        )
+                            .animate(
+                              onComplete: (controller) => Future.delayed(1500.ms, () {
+                                controller.reset();
+                                controller.forward();
+                              }),
+                            )
+                            .shimmer(duration: 2000.ms, curve: Curves.easeInOutCirc)),
                   ).animate().scale(delay: 800.ms, duration: 500.ms, curve: Curves.easeInOutCirc),
                 ),
                 Text(
@@ -194,24 +200,77 @@ class PageIntro extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Welcome to the WalkScape character customisation tool!\n\nThis tool can be used to try out the character customisation that is also found directly within the game.\nYou can create a character and download it as a .png to use where ever you like.\n\nSuggestions for more styles and options are very welcome. Reporting any possible graphical issues is also important so we can make sure all of the sprites work perfectly in the game.\n\nYou can contact us from any of the socials found from the website, or by sending mail to contact@walkscape.app.',
+                    'This tool can be used to try out the character customisation that is also found directly within the game. You can create a character and download it as a .png to use where ever you like.\n\nSuggestions for more styles and options are very welcome. Reporting any possible graphical issues is also important so we can make sure all of the sprites work perfectly in the game.\n\nYou can contact us from any of the socials found from the website, or by sending mail to contact@walkscape.app.',
                     style: TextStyle(fontSize: ResponsiveBreakpoints.of(context).isDesktop ? 18 : 12, color: Theme.of(context).colorScheme.secondary),
                     textAlign: TextAlign.center,
                   ).animate().fade(delay: 1500.ms, duration: 500.ms, curve: Curves.easeInOutCirc),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: FilledButton(
-                          onPressed: () {
-                            Navigator.push(context, _createRoute(context, ref));
-                          },
-                          child: Text('Begin'))
-                      .animate()
-                      .scale(delay: 2000.ms, duration: 500.ms, curve: Curves.easeInOutCirc),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: FilledButton(onPressed: _goToWebsite, child: Text('Our website')).animate().scale(delay: 2000.ms, duration: 500.ms, curve: Curves.easeInOutCirc),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: FilledButton(
+                              onPressed: () {
+                                Navigator.push(context, _createRoute(context, ref));
+                              },
+                              style: ElevatedButton.styleFrom(minimumSize: Size.zero, padding: EdgeInsets.zero),
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                                child: Text('Begin'),
+                              )).animate().scale(delay: 2000.ms, duration: 500.ms, curve: Curves.easeInOutCirc),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: OutlinedButton(
+                              onPressed: () {
+                                _goToWebsite('https://walkscape.app');
+                              },
+                              style: OutlinedButton.styleFrom(minimumSize: Size.zero, padding: EdgeInsets.zero),
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
+                                child: Text('Our website'),
+                              )).animate().scale(delay: 2300.ms, duration: 500.ms, curve: Curves.easeInOutCirc),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: OutlinedButton(
+                              onPressed: () {
+                                _goToWebsite('https://www.patreon.com/WalkScape');
+                              },
+                              style: OutlinedButton.styleFrom(minimumSize: Size.zero, padding: EdgeInsets.zero),
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.favorite_outline,
+                                      size: 18,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text('Patreon'),
+                                  ],
+                                ),
+                              )).animate().scale(delay: 2600.ms, duration: 500.ms, curve: Curves.easeInOutCirc),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        )
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),

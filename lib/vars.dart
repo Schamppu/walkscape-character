@@ -83,8 +83,12 @@ const colorOptionsEyes = {
     Color.fromARGB(255, 19, 19, 19),
     Color.fromARGB(255, 39, 39, 39),
   ],
+  'darker brown': [
+    Color.fromARGB(255, 61, 41, 54),
+    Color.fromARGB(255, 82, 51, 63),
+  ],
   'dark brown': [
-    Color.fromARGB(255, 59, 32, 39),
+    Color.fromARGB(255, 82, 51, 63),
     Color.fromARGB(255, 125, 56, 51),
   ],
   'brown': [
@@ -107,6 +111,10 @@ const colorOptionsEyes = {
     Color.fromARGB(255, 58, 63, 94),
     Color.fromARGB(255, 76, 104, 133),
   ],
+  'light blue': [
+    Color.fromARGB(255, 76, 104, 133),
+    Color.fromARGB(255, 79, 164, 184),
+  ],
   'dark green': [
     Color.fromARGB(255, 40, 53, 64),
     Color.fromARGB(255, 47, 87, 83),
@@ -115,13 +123,21 @@ const colorOptionsEyes = {
     Color.fromARGB(255, 47, 87, 83),
     Color.fromARGB(255, 56, 125, 79),
   ],
-  'dark purplish': [
+  'light green': [
+    Color.fromARGB(255, 56, 125, 79),
+    Color.fromARGB(255, 99, 171, 63),
+  ],
+  'dark magenta': [
     Color.fromARGB(255, 41, 29, 43),
     Color.fromARGB(255, 64, 41, 54),
   ],
-  'purplish': [
+  'magenta': [
     Color.fromARGB(255, 64, 41, 54),
     Color.fromARGB(255, 82, 51, 63),
+  ],
+  'light magenta': [
+    Color.fromARGB(255, 82, 51, 63),
+    Color.fromARGB(255, 143, 77, 87),
   ],
   'dark brownish': [
     Color.fromARGB(255, 66, 57, 52),
@@ -131,6 +147,10 @@ const colorOptionsEyes = {
     Color.fromARGB(255, 90, 78, 68),
     Color.fromARGB(255, 121, 103, 85),
   ],
+  'light brownish': [
+    Color.fromARGB(255, 121, 103, 85),
+    Color.fromARGB(255, 160, 134, 98),
+  ],
   'dark': [
     Color.fromARGB(255, 27, 27, 27),
     Color.fromARGB(255, 39, 39, 39),
@@ -139,6 +159,22 @@ const colorOptionsEyes = {
     Color.fromARGB(255, 39, 39, 39),
     Color.fromARGB(255, 61, 61, 61),
   ],
+  'light gray': [
+    Color.fromARGB(255, 61, 61, 61),
+    Color.fromARGB(255, 93, 93, 93),
+  ],
+  'dark ginger': [
+    Color.fromARGB(255, 87, 28, 39),
+    Color.fromARGB(255, 142, 37, 29),
+  ],
+  'ginger': [
+    Color.fromARGB(255, 142, 37, 29),
+    Color.fromARGB(255, 198, 69, 36),
+  ],
+  'light ginger': [
+    Color.fromARGB(255, 198, 69, 36),
+    Color.fromARGB(255, 224, 116, 56),
+  ],
   'dark purple': [
     Color.fromARGB(255, 75, 29, 82),
     Color.fromARGB(255, 105, 36, 100),
@@ -146,6 +182,30 @@ const colorOptionsEyes = {
   'purple': [
     Color.fromARGB(255, 105, 36, 100),
     Color.fromARGB(255, 156, 42, 112),
+  ],
+  'light purple': [
+    Color.fromARGB(255, 156, 42, 112),
+    Color.fromARGB(255, 204, 47, 123),
+  ],
+  'blueish darkest': [
+    Color.fromARGB(255, 14, 7, 27),
+    Color.fromARGB(255, 26, 25, 50),
+  ],
+  'blueish darker': [
+    Color.fromARGB(255, 26, 25, 50),
+    Color.fromARGB(255, 42, 47, 78),
+  ],
+  'blueish dark': [
+    Color.fromARGB(255, 42, 47, 78),
+    Color.fromARGB(255, 66, 76, 110),
+  ],
+  'blueish': [
+    Color.fromARGB(255, 66, 76, 110),
+    Color.fromARGB(255, 101, 115, 146),
+  ],
+  'light blueish': [
+    Color.fromARGB(255, 101, 115, 146),
+    Color.fromARGB(255, 146, 161, 185),
   ],
 };
 
@@ -381,6 +441,10 @@ const colorOptionsFacialHair = {
     Color.fromARGB(255, 58, 63, 94),
     Color.fromARGB(255, 76, 104, 133),
   ],
+  'light blue': [
+    Color.fromARGB(255, 76, 104, 133),
+    Color.fromARGB(255, 79, 164, 184),
+  ],
   'dark green': [
     Color.fromARGB(255, 40, 53, 64),
     Color.fromARGB(255, 47, 87, 83),
@@ -389,13 +453,21 @@ const colorOptionsFacialHair = {
     Color.fromARGB(255, 47, 87, 83),
     Color.fromARGB(255, 56, 125, 79),
   ],
-  'dark purplish': [
+  'light green': [
+    Color.fromARGB(255, 56, 125, 79),
+    Color.fromARGB(255, 99, 171, 63),
+  ],
+  'dark magenta': [
     Color.fromARGB(255, 41, 29, 43),
     Color.fromARGB(255, 64, 41, 54),
   ],
-  'purplish': [
+  'magenta': [
     Color.fromARGB(255, 64, 41, 54),
     Color.fromARGB(255, 82, 51, 63),
+  ],
+  'light magenta': [
+    Color.fromARGB(255, 82, 51, 63),
+    Color.fromARGB(255, 143, 77, 87),
   ],
   'dark brownish': [
     Color.fromARGB(255, 66, 57, 52),
@@ -405,6 +477,10 @@ const colorOptionsFacialHair = {
     Color.fromARGB(255, 90, 78, 68),
     Color.fromARGB(255, 121, 103, 85),
   ],
+  'light brownish': [
+    Color.fromARGB(255, 121, 103, 85),
+    Color.fromARGB(255, 160, 134, 98),
+  ],
   'dark': [
     Color.fromARGB(255, 27, 27, 27),
     Color.fromARGB(255, 39, 39, 39),
@@ -412,6 +488,22 @@ const colorOptionsFacialHair = {
   'gray': [
     Color.fromARGB(255, 39, 39, 39),
     Color.fromARGB(255, 61, 61, 61),
+  ],
+  'light gray': [
+    Color.fromARGB(255, 61, 61, 61),
+    Color.fromARGB(255, 93, 93, 93),
+  ],
+  'dark ginger': [
+    Color.fromARGB(255, 87, 28, 39),
+    Color.fromARGB(255, 142, 37, 29),
+  ],
+  'ginger': [
+    Color.fromARGB(255, 142, 37, 29),
+    Color.fromARGB(255, 198, 69, 36),
+  ],
+  'light ginger': [
+    Color.fromARGB(255, 198, 69, 36),
+    Color.fromARGB(255, 224, 116, 56),
   ],
   'dark purple': [
     Color.fromARGB(255, 75, 29, 82),
@@ -421,56 +513,113 @@ const colorOptionsFacialHair = {
     Color.fromARGB(255, 105, 36, 100),
     Color.fromARGB(255, 156, 42, 112),
   ],
+  'light purple': [
+    Color.fromARGB(255, 156, 42, 112),
+    Color.fromARGB(255, 204, 47, 123),
+  ],
+  'blueish darkest': [
+    Color.fromARGB(255, 14, 7, 27),
+    Color.fromARGB(255, 26, 25, 50),
+  ],
+  'blueish darker': [
+    Color.fromARGB(255, 26, 25, 50),
+    Color.fromARGB(255, 42, 47, 78),
+  ],
+  'blueish dark': [
+    Color.fromARGB(255, 42, 47, 78),
+    Color.fromARGB(255, 66, 76, 110),
+  ],
+  'blueish': [
+    Color.fromARGB(255, 66, 76, 110),
+    Color.fromARGB(255, 101, 115, 146),
+  ],
+  'light blueish': [
+    Color.fromARGB(255, 101, 115, 146),
+    Color.fromARGB(255, 146, 161, 185),
+  ],
 };
 
-const colorOptionsEyebrowns = {
+const colorOptionsEyebrows = {
+  'black': [
+    Color.fromARGB(255, 27, 27, 27),
+  ],
   'dark': [
     Color.fromARGB(255, 39, 39, 39),
   ],
-  'grey': [
-    Color.fromARGB(255, 61, 61, 61),
+  'gray': [
+    Color.fromARGB(255, 93, 93, 93),
   ],
-  'dark brown': [
+  'light gray': [
+    Color.fromARGB(255, 133, 133, 133),
+  ],
+  'darkest brown': [
     Color.fromARGB(255, 59, 32, 39),
   ],
-  'brown': [
+  'dark brown': [
     Color.fromARGB(255, 125, 56, 51),
   ],
-  'dark red': [
+  'brown': [
+    Color.fromARGB(255, 171, 81, 48),
+  ],
+  'light brown': [
+    Color.fromARGB(255, 207, 117, 43),
+  ],
+  'darkest red': [
     Color.fromARGB(255, 79, 29, 76),
   ],
-  'red': [
+  'dark red': [
     Color.fromARGB(255, 120, 29, 79),
   ],
-  'dark blue': [
-    Color.fromARGB(255, 43, 43, 69),
+  'red': [
+    Color.fromARGB(255, 173, 47, 69),
   ],
-  'blue': [
+  'light red': [
+    Color.fromARGB(255, 230, 69, 57),
+  ],
+  'darker blue': [
     Color.fromARGB(255, 58, 63, 94),
   ],
-  'dark green': [
+  'blue': [
+    Color.fromARGB(255, 76, 104, 133),
+  ],
+  'light blue': [
+    Color.fromARGB(255, 79, 164, 184),
+  ],
+  'darkest green': [
     Color.fromARGB(255, 40, 53, 64),
   ],
-  'green': [
+  'dark green': [
     Color.fromARGB(255, 47, 87, 83),
   ],
-  'dark purplish': [
+  'green': [
+    Color.fromARGB(255, 56, 125, 79),
+  ],
+  'light green': [
+    Color.fromARGB(255, 99, 171, 63),
+  ],
+  'darkest magenta': [
     Color.fromARGB(255, 41, 29, 43),
   ],
-  'purplish': [
+  'dark magenta': [
     Color.fromARGB(255, 64, 41, 54),
   ],
-  'dark brownish': [
+  'magenta': [
+    Color.fromARGB(255, 82, 51, 63),
+  ],
+  'light magenta': [
+    Color.fromARGB(255, 143, 77, 87),
+  ],
+  'darkest brownish': [
     Color.fromARGB(255, 66, 57, 52),
   ],
-  'brownish': [
+  'dark brownish': [
     Color.fromARGB(255, 90, 78, 68),
   ],
-  'dark purple': [
-    Color.fromARGB(255, 75, 29, 82),
+  'brownish': [
+    Color.fromARGB(255, 121, 103, 85),
   ],
-  'purple': [
-    Color.fromARGB(255, 105, 36, 100),
+  'light brownish': [
+    Color.fromARGB(255, 160, 134, 98),
   ],
   'dark ginger': [
     Color.fromARGB(255, 87, 28, 39),
@@ -478,11 +627,32 @@ const colorOptionsEyebrowns = {
   'ginger': [
     Color.fromARGB(255, 142, 37, 29),
   ],
-  'dark blueish': [
+  'light ginger': [
+    Color.fromARGB(255, 198, 69, 36),
+  ],
+  'dark purple': [
+    Color.fromARGB(255, 75, 29, 82),
+  ],
+  'purple': [
+    Color.fromARGB(255, 105, 36, 100),
+  ],
+  'light purple': [
+    Color.fromARGB(255, 156, 42, 112),
+  ],
+  'blueish darkest': [
+    Color.fromARGB(255, 14, 7, 27),
+  ],
+  'blueish darker': [
     Color.fromARGB(255, 26, 25, 50),
   ],
-  'blueish': [
+  'blueish dark': [
     Color.fromARGB(255, 42, 47, 78),
+  ],
+  'blueish': [
+    Color.fromARGB(255, 66, 76, 110),
+  ],
+  'light blueish': [
+    Color.fromARGB(255, 101, 115, 146),
   ],
 };
 

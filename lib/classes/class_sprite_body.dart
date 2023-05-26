@@ -21,6 +21,7 @@ class SpriteBody implements OptionInterface {
   final List<SpriteGeneric> outfitOptions = [];
   final List<SpriteGeneric> eyeOptions = [];
   final List<SpriteGeneric> faceAccessoryOptions = [];
+  final List<SpriteGeneric> backAccessoryOptions = [];
   final List<SpriteGeneric> headwearOptions = [];
   final List<SpriteGeneric> facepaintOptions = [];
   String irisPath = '';
@@ -47,6 +48,7 @@ class SpriteBody implements OptionInterface {
     addGeneric('$rootFolder$folder/face_accessories/', faceAccessoryOptions, layerFaceAccessory, null, 'faceAccessory');
     addGeneric('$rootFolder$folder/headwear/', headwearOptions, layerHeadwear, layerHeadwearSupp, 'headwear');
     addGeneric('$rootFolder$folder/facepaints/', facepaintOptions, layerFacepaint, null, 'facepaint');
+    addGeneric('$rootFolder$folder/back_accessories/', backAccessoryOptions, layerBackAccessory, null, 'backAccessory');
     faceOptions.sort((a, b) => sortByNames(a.name, b.name));
     noseOptions.sort((a, b) => sortByNames(a.name, b.name));
     hairOptions.sort((a, b) => sortByNames(a.name, b.name));
@@ -55,6 +57,7 @@ class SpriteBody implements OptionInterface {
     faceAccessoryOptions.sort((a, b) => sortByNames(a.name, b.name));
     headwearOptions.sort((a, b) => sortByNames(a.name, b.name));
     facepaintOptions.sort((a, b) => sortByNames(a.name, b.name));
+    backAccessoryOptions.sort((a, b) => sortByNames(a.name, b.name));
     irisPath = '$rootFolder$folder/iris/iris.png';
   }
 }

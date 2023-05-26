@@ -32,7 +32,7 @@ void initProviders(WidgetRef ref) {
       colorProviderList: [providerColorBackground]);
   ref.read(providerChosenBackAccessory.notifier).init(
       defaultChoice: null,
-      optionList: PfpManager().optionsBackAccessory,
+      optionList: body.backAccessoryOptions,
       canBeNulled: true,
       type: LayerType.backAccessory,
       label: 'Back Accessory',
@@ -144,7 +144,7 @@ void initProviders(WidgetRef ref) {
         defaultPalette: 'dark',
         changePalette: 'dark',
         typeList: [LayerType.face],
-        colorMap: colorOptionsEyebrowns,
+        colorMap: colorOptionsEyebrows,
         label: 'Eyebrow color',
       );
   ref.read(providerColorEyes.notifier).init(

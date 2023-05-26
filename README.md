@@ -18,54 +18,38 @@ After you've setup the project properly on your PC, you can start the project wi
 **Important:** The project needs an `/assets` folder to work properly. This **is not included** with the project, as those are game assets that are used in the real game and not something we want to share openly. You can make your own assets and use those
 with the tool. Keeping the folder structure similar is essential to make the tool work - otherwise you'll need to change the paths in `pfp_manager.dart`. The folder structure is the following:
 
-- /assets
-    - /pfp
-        - /back_accessories
-            - back_1.png
-            - ...
-        - /human_a
-            - /bodies
-                - body.png
-            - /eyes
-                - eyes_1.png
-                - ...
-            - /face
-                - /face_1
-                    - angry.png
-                    - laughing.png
-                    - normal.png
-                    - sad.png
-                    - smile.png
-                    - smirk.png
-                    - surprise.png
-                    - very_angry.png
-                - /...
-            - /face_accessories
-                - accessory_1.png
-                - ...
-            - /hairs
-                - hair_1.png
-                - hair_1_supp.png (if you want parts of the hairstyle drawn to the background)
-                - ...
-            - /iris
-                - iris.png
-            - /noses
-                - nose_1.png
-                - ...
-            - /outfits
-                - outfit_1.png
-                - outfit_1_var1.png
-                - ...
-        - /human_b ...
+We have instead provided you with a `assets_placeholder` folder. It has some samples inside and shows the generic folder structure. If you rename that folder to `/assets`, the project should start up just fine.
 
-The tool uses pixel palette recoloring to swap the hairstyles. You can change the palette to your liking in `/lib/vars.dart`. If you do that, you must also change the default palette (from which the colors get swapped to other one) in `character_image.dart`, both in the `getDefaultColor()` and `getChangedColor()`.
+The tool uses pixel palette recoloring to swap the hairstyles. You can change the palette to your liking in `/lib/vars.dart`. If you do that, you must also change the default palette (from which the colors get swapped to other one) in `functions.dart` file's `initProviders()` function.
 
 ## About code
 
-The tool was developed hastily, and many parts of the code are not meant to be maintained well. Because of my laziness when making this, some of the classes and components are *way longer* than they should. If you'd like to help refactoring it, pull requests
-are very welcome.
+The tool was refactored, and now uses Riverpod's state management providers. If you have improvements or bug fixes in mind, I'm more than happy to receive pull requests.
 
-## Screenshots
+## File naming conventions
+
+`ex_` means that the asset is exclusive, and needs the developer mode activated to be unlocked.
+
+`_bck` means that the asset is "supplementary" and drawn to the background. This is used in hairstyles and headware to make some parts of the asset be drawn behind the character.
+
+`_var` means that the asset is a variant. This means that it's basically the same asset, but with some minor changes (like color changes) to it.
+
+## Copyrights and usage
+
+You can use the tool for your own projects, but please don't use the provided art assets in other way than a starting point. If you are familiar in pixel art, you can also use the tool to try out your own character customization assets for WalkScape and suggest them for us to use in the game! It would be awesome to see your creations made with the tool.
+
+
+## Screenshots (after refactoring)
+
+![Screenshot #1](/screenshots/sc4.png?raw=true "Screenshot #1")
+
+![Screenshot #2](/screenshots/sc5.png?raw=true "Screenshot #2")
+
+![Screenshot #3](/screenshots/sc6.png?raw=true "Screenshot #3")
+
+![Screenshot #3](/screenshots/sc7.png?raw=true "Screenshot #4")
+
+## Screenshots (before refactoring)
 
 ![Screenshot #1](/screenshots/sc1.png?raw=true "Screenshot #1")
 

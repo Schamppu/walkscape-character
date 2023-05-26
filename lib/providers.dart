@@ -175,6 +175,13 @@ class ProviderOptionInterfaceNotifier extends StateNotifier<ProviderOptionInterf
               chosenVariantPath: null,
             )
           : null;
+      (state.chosenOption as SpriteGeneric).type == 'facepaint'
+          ? state = state.copyWith(
+              chosenOption: body.facepaintOptions.firstWhere((option) => !option.name.contains('ex_')),
+              list: body.facepaintOptions.where((option) => !option.name.contains('ex_') || PfpManager().developer).toList(),
+              chosenVariantPath: null,
+            )
+          : null;
     }
   }
 

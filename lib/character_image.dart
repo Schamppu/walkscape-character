@@ -47,8 +47,8 @@ class CharacterImage extends ConsumerWidget {
         if (provider != null) {
           returnList.add(SpriteBuilder(spriteProvider: provider, width: width, height: height, supplementary: true));
         }
-        // If it's the face layer, also draw the face paint layer over it
-        if (i == layerFace) {
+        // If it's the nose layer, also draw the face paint layer over it
+        if (i == layerNose) {
           returnList.add(FacepaintBuilder(
             width: width,
             height: height,
@@ -274,6 +274,7 @@ class FacepaintBuilder extends ConsumerWidget {
     final facepaint = ref.watch(providerChosenFacepaint).chosenOption;
     ref.watch(providerChosenFace).chosenOption;
     ref.watch(providerColorFacepaint).changePalette;
+    ref.watch(providerChosenNose).chosenOption;
     return SizedBox(
       child: facepaint != null
           ? FutureBuilder(

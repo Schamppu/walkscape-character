@@ -75,7 +75,6 @@ flutter:
   - assets/pfp/
   - assets/pfp/backgrounds/
   - assets/pfp/back_accessories/
-  - assets/pfp/facepaints/
   - assets/pfp/human_a/
   - assets/pfp/human_a/bodies/
   - assets/pfp/human_a/eyes/
@@ -85,6 +84,7 @@ flutter:
   - assets/pfp/human_a/noses/
   - assets/pfp/human_a/outfit/
   - assets/pfp/human_a/headwear/
+  - assets/pfp/human_a/facepaints/
   - assets/pfp/human_a/face/
   - assets/pfp/human_a/face/face_1/
   - assets/pfp/human_a/face/face_2/
@@ -105,6 +105,7 @@ flutter:
   - assets/pfp/human_b/noses/
   - assets/pfp/human_b/outfit/
   - assets/pfp/human_b/headwear/
+  - assets/pfp/human_b/facepaints/
   - assets/pfp/human_b/face/
   - assets/pfp/human_b/face/face_1/
   - assets/pfp/human_b/face/face_2/

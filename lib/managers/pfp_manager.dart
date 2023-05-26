@@ -36,7 +36,6 @@ class PfpManager {
   final List<SpriteGeneric> optionsBackground = [];
   final List<SpriteBody> optionsBody = [];
   final List<SpriteGeneric> optionsBackAccessory = [];
-  final List<SpriteGeneric> optionsFacepaint = [];
 
   /// Whether or not the app has already been initialized
   var initialized = false;
@@ -108,8 +107,6 @@ class PfpManager {
     bodyFolders.remove('facepaints');
     // Add back accessories to their corresponding data structure
     addGeneric('${rootFolder}back_accessories/', optionsBackAccessory, layerBackAccessory, null, 'backAccessories');
-    // Add back accessories to their corresponding data structure
-    addGeneric('${rootFolder}facepaints/', optionsFacepaint, layerFacepaint, layerFacepaint, 'facePaints');
     // Add backgrounds to their corresponding data structure
     addGeneric('${rootFolder}backgrounds/', optionsBackground, -1, null, 'background');
     for (var folder in bodyFolders) {

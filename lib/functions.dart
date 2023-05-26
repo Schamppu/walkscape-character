@@ -103,7 +103,7 @@ void initProviders(WidgetRef ref) {
   );
   ref.read(providerChosenFacepaint.notifier).init(
     defaultChoice: null,
-    optionList: PfpManager().optionsFacepaint,
+    optionList: body.facepaintOptions,
     canBeNulled: true,
     type: LayerType.facepaint,
     label: 'Face paint',
@@ -232,18 +232,23 @@ Future<Uint8List> switchColorPalette({required String imagePath, required List<C
 Future<Uint8List> switchColorPaletteFacepaint(WidgetRef ref) async {
   late Uint8List faceBytes;
   late Uint8List facepaintBytes;
+  late Uint8List noseBytes;
   final face = ref.read(providerChosenFace).chosenOption! as SpriteGeneric;
   final facepaint = ref.read(providerChosenFacepaint).chosenOption! as SpriteGeneric;
+  final nose = ref.read(providerChosenNose).chosenOption! as SpriteGeneric;
   await rootBundle.load(facepaint.spritePath).then((data) => facepaintBytes = data.buffer.asUint8List());
   await rootBundle.load(face.spritePath).then((data) => faceBytes = data.buffer.asUint8List());
+  await rootBundle.load(nose.spritePath).then((data) => noseBytes = data.buffer.asUint8List());
 
   // Decode the bytes to [Image] type
   final faceImage = img.decodeImage(faceBytes);
   final facepaintImage = img.decodeImage(facepaintBytes);
+  final noseImage = img.decodeImage(noseBytes);
 
   // Convert the [Image] to RGBA formatted pixels
   final facePixels = faceImage!.getBytes(order: img.ChannelOrder.rgba);
   final facepaintPixels = facepaintImage!.getBytes(order: img.ChannelOrder.rgba);
+  final nosePixels = noseImage!.getBytes(order: img.ChannelOrder.rgba);
 
   // Get default skin palette
   final skinPalette = colorOptionsSkin[ref.read(providerColorSkin).defaultPalette];
@@ -264,7 +269,9 @@ Future<Uint8List> switchColorPaletteFacepaint(WidgetRef ref) async {
         for (var c = 0; c < skinPalette.length; c++) {
           final color = skinPalette[c];
           // print('face: ${facePixels[i]}, palette: ${color.red}');
-          if (facePixels[i] == color.red && facePixels[i + 1] == color.green && facePixels[i + 2] == color.blue) {
+          /// Check the face & nose for the color
+          if ((facePixels[i] == color.red && facePixels[i + 1] == color.green && facePixels[i + 2] == color.blue) ||
+              (nosePixels[i] == color.red && nosePixels[i + 1] == color.green && nosePixels[i + 2] == color.blue)) {
             facepaintPixels[i] = facepaintPalette[c].red;
             facepaintPixels[i + 1] = facepaintPalette[c].green;
             facepaintPixels[i + 2] = facepaintPalette[c].blue;

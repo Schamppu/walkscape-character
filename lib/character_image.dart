@@ -101,12 +101,13 @@ class BackgroundImage extends ConsumerWidget {
                   bg.spritePath,
                   width: width,
                   height: height,
-                ).blurred(blur: 2, colorOpacity: 0.0),
+                ).blurred(blur: 1.5, colorOpacity: 0.1),
                 // Background gradient
                 Container(
                   width: width * 2,
                   height: height * 2,
-                  decoration: const BoxDecoration(gradient: RadialGradient(colors: [Colors.transparent, Colors.black54], radius: 0.7)),
+                  decoration: BoxDecoration(
+                      gradient: RadialGradient(colors: [Colors.transparent, Colors.transparent, Colors.black.withOpacity(0.6)], radius: 0.7, stops: [0.0, 0.6, 1.0])),
                 )
               ],
             )
